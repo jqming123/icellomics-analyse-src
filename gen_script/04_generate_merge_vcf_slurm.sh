@@ -117,6 +117,7 @@ for chr in "${MAIN_CHRS_AVAILABLE[@]}"; do
 done
 INPUT_FILES_SNP_CHRS=$(printf "%s " "${SNP_CHRS_FILES[@]}")
 generate_merge_script "MergeSNP_Chrs" "main_chrs_snps.vcf.gz" "${INPUT_FILES_SNP_CHRS}" "${JOB_SCRIPT_SNP_CHRS}" "merge_snps_chrs"
+echo "已生成 $JOB_SCRIPT_SNP_CHRS"
 
 # 4. 仅合并主染色体 INDELs
 JOB_SCRIPT_INDEL_CHRS="${JOB_SCRIPT_DIR}/merge_indels_chrs_only.sh"
@@ -126,6 +127,7 @@ for chr in "${MAIN_CHRS_AVAILABLE[@]}"; do
 done
 INPUT_FILES_INDEL_CHRS=$(printf "%s " "${INDEL_CHRS_FILES[@]}")
 generate_merge_script "MergeINDEL_Chrs" "main_chrs_indels.vcf.gz" "${INPUT_FILES_INDEL_CHRS}" "${JOB_SCRIPT_INDEL_CHRS}" "merge_indels_chrs"
+echo "已生成 $JOB_SCRIPT_INDEL_CHRS"
 
 echo "---- 完成 ----"
-echo "已生成针对 ${REF_NAME} 的作业脚本。"
+echo "已生成针对 ${PROJECT_NAME} 的作业脚本。"

@@ -1,0 +1,22 @@
+# Project configuration template for generate_scRNA_slurm.sh
+# Copy this file to: <project_dir>/project.conf
+
+# Required (project-specific)
+PROJ_LIB_TYPE=10X           # 10X | Smart-seq2 | Drop-seq | inDrop_v1 | inDrop_v2 | inDrop_v3 | Bulk
+PROJ_REF_NAME=hg38_Ensemble # e.g., CriGri-PICRH-1.0 | CriGri-PICRH-1.0_Ensemble | hg38_Ensemble
+
+# Optional upstream overrides
+PROJ_READ_TYPE=fastq        # fastq | sra
+PROJ_SEQ_TYPE=pair          # pair | single (only for Bulk/Smart-seq2)
+PROJ_INDEX_BUILD=index_exist # index_build | index_exist
+PROJ_DESIGNATED_ALL=All_samples # All_samples | Designated_samples
+PROJ_SAMPLE_LIST=           # Sample1-Sample2 (only if PROJ_DESIGNATED_ALL=Designated_samples)
+PROJ_CELLRANGER_LOCALCORES=12
+PROJ_CELLRANGER_LOCALMEM=64
+PROJ_DROP_REPORT=           # /path/to/mit_genes_human.ensembl.rds (Drop-seq/inDrop)
+
+# Optional downstream overrides
+PROJ_EXPR_DATA=             # default: 10X -> 03.expression/outs/filtered_feature_bc_matrix; others -> 03.expression/Project_GeneMat_rawCounts.txt
+PROJ_META_DATA=             # /path/to/metaData.txt
+PROJ_REF_PATH=              # /path/to/ref
+PROJ_WORK_PATH=             # default: 03.expression/downstream
