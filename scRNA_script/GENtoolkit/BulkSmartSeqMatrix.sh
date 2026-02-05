@@ -173,12 +173,12 @@ if [[ "$2" == "Designated_samples" ]];then
         ProjectName=${PathSplit[-2]}
         echo "$ProjectName is partial prefix of matrix output files."
 
-        perl rsem-generate-data-matrix $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_rawCounts.txt
-        perl rsem-generate-data-matrix $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_rawCounts.txt
-        perl rsem-generate-data-matrix-TPM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
-        perl rsem-generate-data-matrix-TPM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
-        perl rsem-generate-data-matrix-FPKM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
-        perl rsem-generate-data-matrix-FPKM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
+        rsem-generate-data-matrix $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_rawCounts.txt
+        rsem-generate-data-matrix $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_rawCounts.txt
+        rsem-generate-data-matrix-TPM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
+        rsem-generate-data-matrix-TPM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
+        rsem-generate-data-matrix-FPKM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
+        rsem-generate-data-matrix-FPKM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
     fi
 
 # You can run all the samples at once.
@@ -299,10 +299,10 @@ elif [[ "$2" == "All_samples" ]];then
     ProjectName=${PathSplit[-2]}
     echo "$ProjectName is partial prefix of matrix output files."
 
-    perl rsem-generate-data-matrix $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_rawCounts.txt
-    perl rsem-generate-data-matrix $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_rawCounts.txt
-    perl rsem-generate-data-matrix-TPM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
-    perl rsem-generate-data-matrix-TPM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
-    perl rsem-generate-data-matrix-FPKM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
-    perl rsem-generate-data-matrix-FPKM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
+    rsem-generate-data-matrix $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_rawCounts.txt
+    rsem-generate-data-matrix $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_rawCounts.txt
+    rsem-generate-data-matrix-TPM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
+    rsem-generate-data-matrix-TPM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
+    rsem-generate-data-matrix-FPKM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
+    rsem-generate-data-matrix-FPKM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
 fi              

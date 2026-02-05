@@ -34,7 +34,7 @@ if [ -z "${REF_NAME}" ]; then
     exit 1
 fi
 
-# 2. 根据 REF_NAME 分支设置具体路径和版本号
+# 2. 根据 REF_NAME 设置参考基因组相关文件的具体路径
 case "${REF_NAME}" in
     "CriGri-PICRH-1.0")
         ## CHO NCBI 基因组配置 
