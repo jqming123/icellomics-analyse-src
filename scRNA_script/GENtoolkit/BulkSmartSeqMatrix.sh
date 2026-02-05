@@ -36,6 +36,46 @@
 #         [ g_matrix | n_matrix]
 ####################################################################
 
+# Function to generate matrix from RSEM results
+generate_matrix_from_rsem() {
+    local col_idx=$1
+    shift
+    local files=("$@")
+    # Perl script used 5 for TPM (column 6), 6 for FPKM (column 7)
+    local awk_col=$((col_idx + 1))
+
+    awk -v target_col="$awk_col" '
+    BEGIN { OFS="\t" }
+    FNR==1 {
+        fname = FILENAME
+        sub(".*/", "", fname)
+        if (fname ~ /\.genes\.results$/) sub(/\.genes\.results$/, "", fname)
+        else if (fname ~ /\.isoforms\.results$/) sub(/\.isoforms\.results$/, "", fname)
+        
+        if (NR==1) { headers = "\"" fname "\"" } 
+        else { headers = headers "\t\"" fname "\"" }
+        next
+    }
+    {
+        if (NR == FNR) {
+            # Quote the ID as in original perl script
+            ids[FNR] = "\"" $1 "\""
+            # Handle potentially missing values or just raw extraction
+            vals[FNR] = $target_col
+            max_lines = FNR
+        } else {
+            vals[FNR] = vals[FNR] "\t" $target_col
+        }
+    }
+    END {
+        print "", headers
+        for (i=2; i<=max_lines; i++) {
+            print ids[i], vals[i]
+        }
+    }
+    ' "${files[@]}"
+}
+
 # Build the path of intermediate output file and expression matrixes.
 single_project_path=$(dirname "$6")
 intermediate_output=${single_project_path}/2_output
@@ -175,10 +215,51 @@ if [[ "$2" == "Designated_samples" ]];then
 
         rsem-generate-data-matrix $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_rawCounts.txt
         rsem-generate-data-matrix $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_rawCounts.txt
-        rsem-generate-data-matrix-TPM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
-        rsem-generate-data-matrix-TPM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
-        rsem-generate-data-matrix-FPKM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
-        rsem-generate-data-matrix-FPKM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
+        
+        # Generate helper script for TPM/FPKM extraction
+        cat > $intermediate_output/generate_matrix_col.pl << 'EOF'
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use File::Basename;
+my $col_idx = shift @ARGV;
+my @files = @ARGV;
+my %data;
+my @ids;
+my @headers;
+my $first = 1;
+foreach my $file (@files) {
+    my $name = basename($file);
+    $name =~ s/\.(genes|isoforms)\.results$//;
+    push @headers, "\"$name\"";
+    open my $fh, "<", $file or die "Cannot open $file: $!\n";
+    <$fh>;
+    while (<$fh>) {
+        chomp;
+        my @f = split /\t/;
+        my $id = $f[0];
+        if ($first) { push @ids, "\"$id\""; }
+        $data{$id}->{$name} = $f[$col_idx];
+    }
+    close $fh;
+    $first = 0;
+}
+print join("\t", "", @headers) . "\n";
+foreach my $id (@ids) {
+    my $clean_id = $id; $clean_id =~ s/"//g;
+    print "$id";
+    foreach my $header (@headers) {
+        my $clean_h = $header; $clean_h =~ s/"//g;
+        print "\t" . ($data{$clean_id}->{$clean_h} // 0);
+    }
+    print "\n";
+}
+EOF
+        
+        perl $intermediate_output/generate_matrix_col.pl 5 $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
+        perl $intermediate_output/generate_matrix_col.pl 5 $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
+        perl $intermediate_output/generate_matrix_col.pl 6 $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
+        perl $intermediate_output/generate_matrix_col.pl 6 $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
     fi
 
 # You can run all the samples at once.
@@ -301,8 +382,10 @@ elif [[ "$2" == "All_samples" ]];then
 
     rsem-generate-data-matrix $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_rawCounts.txt
     rsem-generate-data-matrix $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_rawCounts.txt
-    rsem-generate-data-matrix-TPM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
-    rsem-generate-data-matrix-TPM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
-    rsem-generate-data-matrix-FPKM $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
-    rsem-generate-data-matrix-FPKM $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
+
+    # Call shell function to generate TPM and FPKM matrices
+    generate_matrix_from_rsem 5 $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
+    generate_matrix_from_rsem 5 $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
+    generate_matrix_from_rsem 6 $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
+    generate_matrix_from_rsem 6 $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
 fi              
