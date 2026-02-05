@@ -54,7 +54,7 @@ case "${REF_NAME}" in
             NC_048603.1
             NC_048604.1
         )
-        VEP_SPECIES="cricetulus_griseus_picr"
+        VEP_SPECIES="cricetulus_griseus_picr_merged"
         ## 基因组版本名称 (必须与VEP缓存中的文件夹名称匹配)
         export GENOME_ASSEMBLY="CriGri-PICRH-1.0"
         ;;

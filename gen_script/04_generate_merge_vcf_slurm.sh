@@ -100,6 +100,8 @@ echo "End time: \$(date)"
 EOF
 }
 
+
+# 后面决定忽略unplaced scaffolds，所以直接跳过了生成unplaced scaffolds对应脚本的步骤
 # 1 & 2. 合并所有 (含 Scaffolds) - 逻辑保持不变，因为 ls *.filtered 会匹配所有
 # JOB_SCRIPT_SNP_ALL="${JOB_SCRIPT_DIR}/merge_snps_all.sh"
 # INPUT_FILES_SNP_ALL="\$(ls -1 ${INPUT_DIR}/*.filtered.snps.vcf.gz | sort -V)"

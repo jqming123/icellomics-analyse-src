@@ -57,6 +57,7 @@ mkdir -p "${VCF_RAW_DIR}" "${VCF_FILTERED_DIR}" "${LOG_DIR}/02_joint_calling/err
 # )
 
 # 添加未定位scaffolds标记
+# 后面决定忽略unplaced scaffolds，所以直接跳过了生成unplaced scaffolds对应脚本的步骤
 # regions_to_process=("${main_chrs[@]}" "unplaced_scaffolds")
 
 echo "Generating VCF joint calling and filtering jobs for each region..."

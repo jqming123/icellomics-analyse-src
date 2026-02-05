@@ -43,7 +43,7 @@ JOB_SCRIPT_DIR="${PROJECT_DIR}/02_jobs/genomicsdb_jobs"
 # 创建该阶段所需的输出和日志目录
 mkdir -p "${DB_DIR}" "${DB_DIR}/tmp" "${LOG_DIR}/02_joint_calling" "${JOB_SCRIPT_DIR}"
 
-# --- 【注意】要并行处理的染色体列表改为在config.sh中设置 ---
+# --- 【注意】要处理的染色体列表改为在config.sh中设置 ---
 # 定义主要的染色体 (NCBI RefSeq accession)
 # main_chrs=(
 #     NC_048595.1
@@ -83,6 +83,7 @@ for region in "${regions_to_process[@]}"; do
     # 根据 region 是染色体还是 unplaced scaffolds 集合来设定 GATK 的 -L 参数
     if [[ "${region}" == "unplaced_scaffolds" ]]; then
         # 如果是 unplaced scaffolds，则使用文件列表作为输入
+        # 后面决定忽略unplaced scaffolds，所以直接跳过了生成unplaced scaffolds对应脚本的步骤
         # gatk_l_option="-L ${UNPLACED_SCAFFOLDS_LIST}"
         continue
     else
