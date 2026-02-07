@@ -6,30 +6,27 @@
 #SBATCH -c 10               # 每个任务的CPU核心数
 #SBATCH --mem=200G          # 内存申请
 #SBATCH --time=200:00:00    # 运行时间
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble/logs/bwa_index.out # 标准输出
-#SBATCH -e /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble/logs/bwa_index.err # 标准错误
+#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble/logs/bwa_index.log
 
 set -e pipefail
 
 # --- 1. 定义变量和路径 ---
-REF_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble"
-GENOME_FASTA="${REF_DIR}/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
-LOG_DIR="${REF_DIR}/logs"
+REF_ROOT_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome"
+# 注意修改以下参数
+GENOME_NAME=""
+REF_GENOME_DIR="${REF_ROOT_PATH}/${GENOME_NAME}"
+GENOME_FASTA="${REF_GENOME_DIR}/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
+LOG_DIR="${REF_GENOME_DIR}/logs"
 MAMBA_ENV_NAME="genome_env"
 
 # 创建日志目录 (如果不存在)
 mkdir -p ${LOG_DIR}
 
-# 定义一个用于所有输出的日志文件
-ALL_OUTPUT_LOG="${LOG_DIR}/bwa_index_Homo_sapiens-GRCh38.log"
-touch ${ALL_OUTPUT_LOG}
-exec > "${ALL_OUTPUT_LOG}" 2>&1
 
 
 
 # --- 2. 记录脚本启动信息 ---
 echo "=========================================================="
-echo "作业名称: BWA_Index_Homo_sapiens-GRCh38"
 echo "脚本启动时间: $(date)"
 echo "参考基因组路径: ${GENOME_FASTA}"
 echo "=========================================================="
@@ -57,7 +54,7 @@ echo "文件检查通过。"
 
 # --- 5. 执行核心命令：建立索引 ---
 echo "开始建立 BWA索引..."
-cd ${REF_DIR}
+cd ${REF_GENOME_DIR}
 
 bwa index ${GENOME_FASTA}
 
@@ -71,12 +68,12 @@ echo
 
 # --- 6. 验证输出并结束 ---
 echo "验证生成的索引文件:"
-ls -lh ${REF_DIR} | grep "$(basename ${GENOME_FASTA})"
+ls -lh ${REF_GENOME_DIR} | grep "$(basename ${GENOME_FASTA})"
 
 
 # --- 7. 创建序列字典 (.dict文件)，GATK需要它来处理染色体信息
 echo "gatk的路径是: $(which gatk)"
-cd ${REF_DIR}
+cd ${REF_GENOME_DIR}
 gatk CreateSequenceDictionary -R ${GENOME_FASTA}
 
 echo "=========================================================="

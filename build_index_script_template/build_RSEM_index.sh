@@ -16,11 +16,13 @@ echo "Job started at: $(date)"
 echo "----------------------------------------------------"
 
 # 1. 设置参考基因组工作目录
-REF_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble"
-
+REF_ROOT_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome"
+# 注意修改以下参数
+GENOME_NAME=""
+REF_GENOME_DIR="${REF_ROOT_PATH}/${GENOME_NAME}"
 # 2. 设置原始参考文件
-GENOME_FNA_ORIG="${REF_DIR}/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
-ANNOTATION_GTF="${REF_DIR}/Homo_sapiens.GRCh38.115.gtf" 
+GENOME_FNA_ORIG="${REF_GENOME_DIR}/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
+ANNOTATION_GTF="${REF_GENOME_DIR}/Homo_sapiens.GRCh38.115.gtf" 
 
 # 3. 设置线程数
 NCPUS=20
@@ -32,7 +34,7 @@ mamba activate /hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/RNAs
 export PERL5LIB="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/RNAseq_E4/lib/perl5/5.32"
 
 
-cd "${REF_DIR}"
+cd "${REF_GENOME_DIR}"
 
 echo "### Building RSEM index... ###"
 mkdir -p rsem.index

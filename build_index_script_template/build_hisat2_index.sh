@@ -20,7 +20,10 @@ else
 fi
 
 # Build HISAT2 index for hg38_Ensemble
-GENOME_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble"
+REF_ROOT_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome"
+# 注意修改以下参数
+GENOME_NAME=""
+GENOME_DIR="${REF_ROOT_PATH}/${GENOME_NAME}"
 FASTA="${GENOME_DIR}/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
 OUT_PREFIX="${GENOME_DIR}/hisat2_index/genome"
 

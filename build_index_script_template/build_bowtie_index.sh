@@ -13,8 +13,12 @@ source "/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/co
 conda activate ATAC_E4
 
 # 确保参考基因组FASTA文件存在
-FASTA_FILE="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/CriGri-PICRH-1.0_Ensemble/Cricetulus_griseus_picr.CriGri-PICRH-1.0.dna.toplevel.fa"
-INDEX_BASENAME="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/CriGri-PICRH-1.0_Ensemble/Cricetulus_griseus_picr.CriGri-PICRH-1.0.dna.toplevel"
+REF_ROOT_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome"
+# 注意修改以下参数
+GENOME_NAME="CriGri-PICRH-1.0_Ensemble"
+REF_GENOME_DIR="${REF_ROOT_PATH}/${GENOME_NAME}"
+FASTA_FILE="${REF_GENOME_DIR}/Cricetulus_griseus_picr.CriGri-PICRH-1.0.dna.toplevel.fa"
+INDEX_BASENAME="${REF_GENOME_DIR}/Cricetulus_griseus_picr.CriGri-PICRH-1.0.dna.toplevel"
 
 if [ -f "$FASTA_FILE" ]; then
     echo "正在为 $FASTA_FILE 构建 Bowtie2 索引..."

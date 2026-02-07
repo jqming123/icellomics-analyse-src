@@ -8,10 +8,14 @@
 #SBATCH --output=/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/CriGri-PICRH-1.0_Ensemble/logs/star_index_%j.log
 
 # 1. 设置路径
-REF_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/CriGri-PICRH-1.0_Ensemble"
-GENOME_FA="${REF_DIR}/Cricetulus_griseus_picr.CriGri-PICRH-1.0.dna.toplevel.fa"
-ANNOTATION_GTF="${REF_DIR}/Cricetulus_griseus_picr.CriGri-PICRH-1.0.115.gtf"
-LOG_DIR="${REF_DIR}/logs"
+REF_ROOT_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome"
+# 注意修改以下参数
+GENOME_NAME=""
+REF_GENOME_DIR="${REF_ROOT_PATH}/${GENOME_NAME}"
+
+GENOME_FA="${REF_GENOME_DIR}/Cricetulus_griseus_picr.CriGri-PICRH-1.0.dna.toplevel.fa"
+ANNOTATION_GTF="${REF_GENOME_DIR}/Cricetulus_griseus_picr.CriGri-PICRH-1.0.115.gtf"
+LOG_DIR="${REF_GENOME_DIR}/logs"
 
 # 2. 参数设置
 NCPUS=20
@@ -24,7 +28,7 @@ set -e
 eval "$(mamba shell hook --shell bash)"
 mamba activate /hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/RNAseq_E4
 
-cd ${REF_DIR}
+cd ${REF_GENOME_DIR}
 
 echo "================================================="
 echo "STAR INDEX SCRIPT START: $(date)"
