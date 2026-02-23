@@ -68,7 +68,7 @@ CONFIG = {
 
     # 4. 参考基因组设置
     "reference_genomes": {
-        "CriGri-PICRH-1.0": { # 中国仓鼠卵巢细胞
+        "CriGri-PICRH-1.0": { # 中国仓鼠卵巢细胞（已弃用）
             "star_index": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0","star.index"),
             "kallisto_gene_idx": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0","kallisto.index","GCF_003668045.3_CriGri-PICRH-1.0_genomic.gene.fa.idx"),
             "kallisto_transcript_idx": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0","kallisto.index","GCF_003668045.3_CriGri-PICRH-1.0_genomic.transcript.fa.idx"),

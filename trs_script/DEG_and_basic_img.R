@@ -36,7 +36,7 @@ cat(paste0("  - 接收到的细胞系 (cl_name): ", cl_name, "\n"))
 
 groups_dir <- "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG/groups"
 
-# --- 动态构建变量 ---
+# --- 动态构建路径变量 ---
 project <- file.path(groups_dir, cl_name)
 outFolder <- file.path(project, groupname)
 condition <- file.path(outFolder, paste0(groupname, ".tsv"))

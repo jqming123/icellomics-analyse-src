@@ -11,33 +11,31 @@ if [ "$#" -ne 3 ]; then
     exit 1
 fi
 
+# 1. 提取参数并设置为环境变量（供 epi_config.sh 使用）
 export PROJECT_NAME="$1"
 export REF_NAME="$2" 
 FINAL_NAME="$3"
 
-# --- 新增：根据 REF_NAME 自动选择基因组大小 ---
-case "${REF_NAME}" in
-    "CriGri-PICRH-1.0")
-        GSIZE="2366634374"  # CHO 中国仓鼠
-        ;;
-    "CH_Ensemble")
-        GSIZE="2366634374"  # CHO 中国仓鼠
-        ;;
-    "hg38_Ensemble")
-        GSIZE="hs"  # hs: 2,913,022,398 for GRCh38
-        ;;
-    *)
-        GSIZE="hs"          # 默认兜底
-        ;;
-esac
-
-# --- 加载项目配置 ---
+# 2. 加载项目配置
+# 注意：必须在设置完 PROJECT_NAME 和 REF_NAME 后加载
 CONFIG_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/epi_script/epi_config.sh"
+
 if [ ! -f "${CONFIG_PATH}" ]; then
     echo "错误: 配置文件未找到于 ${CONFIG_PATH}"
     exit 1
 fi
-source "${CONFIG_PATH}" # 确保在此处加载，以便后续变量如 EPI_CONDA_ENV_NAME 可用
+
+# 加载配置，这会自动根据 REF_NAME 设置 GSIZE, REF_GENOME, BOWTIE2_INDEX 等
+source "${CONFIG_PATH}"
+
+# 3. 验证关键变量是否已成功加载 (可选，建议保留以增加脚本健壮性)
+if [ -z "${GSIZE}" ]; then
+    echo "错误: GSIZE 未设置，请检查 epi_config.sh 是否正确支持 '${REF_NAME}'" >&2
+    exit 1
+fi
+
+# --- 接下来你可以直接使用变量，例如 $GSIZE, $PROJECT_DIR, $EPI_CONDA_ENV_NAME 等 ---
+echo "正在为项目 ${PROJECT_NAME} (参考基因组: ${REF_NAME}, GSIZE: ${GSIZE}) 生成 Peak Calling 任务..."
 
 # --- 定义输入输出目录 ---
 JOB_DIR="${PROJECT_DIR}/2_jobs"
