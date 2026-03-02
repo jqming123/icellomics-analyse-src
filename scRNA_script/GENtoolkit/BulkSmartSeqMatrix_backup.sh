@@ -83,60 +83,6 @@ matrix_path=${single_project_path}/3_expression_result
 mkdir -p $intermediate_output
 mkdir -p $matrix_path
 
-# Validate input parameters
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$4" ] || [ -z "$5" ] || [ -z "$6" ]; then
-    echo "Error: Missing required parameters" >&2
-    echo "Usage: $0 <type> <mode> <sample_list> <seq_type> <read_type> <raw_path> ..." >&2
-    exit 1
-fi
-
-if [ ! -d "$6" ]; then
-    echo "Error: Raw data path does not exist: $6" >&2
-    exit 1
-fi
-
-# Check if raw path contains either sample directories or fastq files directly
-sample_count=$(find "$6" -maxdepth 1 -type d | grep -v "^$6$" | wc -l)
-fastq_count=$(find "$6" -maxdepth 1 \( -name "*.fastq" -o -name "*.fastq.gz" -o -name "*.fq" -o -name "*.fq.gz" -o -name "*.sra" \) | wc -l)
-
-if [ $sample_count -eq 0 ] && [ $fastq_count -eq 0 ]; then
-    echo "Error: Raw data path is empty or has no sample directories/fastq files: $6" >&2
-    echo "Expected structure:" >&2
-    echo "  raw/Sample1/ (with fastq files inside)" >&2
-    echo "  OR" >&2
-    echo "  raw/ (with fastq files directly)" >&2
-    exit 1
-fi
-
-# If we have direct files but no directories, structure them directly in the raw directory
-if [ $sample_count -eq 0 ] && [ $fastq_count -gt 0 ]; then
-    echo "Detected direct files in raw directory. Structuring them into sample directories..."
-    
-    for file in "$6"/*; do
-        if [ -f "$file" ]; then
-            filename=$(basename "$file")
-            # Skip files that don't match our expected extensions
-            if [[ ! "$filename" =~ \.(fastq|fastq\.gz|fq|fq\.gz|sra)$ ]]; then
-                continue
-            fi
-            
-            sample_id="$filename"
-            sample_id=${sample_id%.gz}
-            sample_id=${sample_id%.fastq}
-            sample_id=${sample_id%.fq}
-            sample_id=${sample_id%.sra}
-            
-            if [[ "$4" == "pair" ]]; then
-                sample_id=$(echo "$sample_id" | sed -E 's/_[R]?[12](_001)?$//')
-            fi
-            
-            mkdir -p "$6/$sample_id"
-            mv "$file" "$6/$sample_id/$filename"
-        fi
-    done
-    echo "Raw data directory successfully structured."
-fi
-
 # When the samples are too many, or several samples needs to be re-run, or something else, you can choose specific to run, not all samples.
 if [[ "$2" == "Designated_samples" ]];then
     for Sample in $6/*
@@ -174,36 +120,9 @@ if [[ "$2" == "Designated_samples" ]];then
                     mkdir -p $intermediate_output/$sample_name/
                     # Handle paired-end reads.
                     if [[ "$4" == "pair" ]];then
-                        # Check for fastq files (.fastq or .fastq.gz) with R1/R2 pattern
-                        if ! (ls $Sample/*1.fastq >/dev/null 2>&1 || ls $Sample/*1.fastq.gz >/dev/null 2>&1 || ls $Sample/*_R1.fastq >/dev/null 2>&1 || ls $Sample/*_R1.fastq.gz >/dev/null 2>&1); then
-                            echo "Error: No R1 fastq files (*1.fastq, *1.fastq.gz, *_R1.fastq, or *_R1.fastq.gz) found in $Sample" >&2
-                            exit 1
-                        fi
-                        if ! (ls $Sample/*2.fastq >/dev/null 2>&1 || ls $Sample/*2.fastq.gz >/dev/null 2>&1 || ls $Sample/*_R2.fastq >/dev/null 2>&1 || ls $Sample/*_R2.fastq.gz >/dev/null 2>&1); then
-                            echo "Error: No R2 fastq files (*2.fastq, *2.fastq.gz, *_R2.fastq, or *_R2.fastq.gz) found in $Sample" >&2
-                            exit 1
-                        fi
-                        
                         # If there are more than two read1 files (fastq format) or two read2 files (fastq format) in a sample, combine them into a single read1 file (fastq format) or read2 file (fastq format).
-                        if (cat $Sample/*1.fastq 2>/dev/null || true; zcat $Sample/*1.fastq.gz 2>/dev/null || true; cat $Sample/*_R1.fastq 2>/dev/null || true; zcat $Sample/*_R1.fastq.gz 2>/dev/null || true) > $intermediate_output/$sample_name/${sample_name}_1.fastq; then
-                            if [ ! -s $intermediate_output/$sample_name/${sample_name}_1.fastq ]; then
-                                echo "Error: Merged R1 fastq file is empty for sample $sample_name" >&2
-                                exit 1
-                            fi
-                        else
-                            echo "Error: Failed to merge R1 fastq files for sample $sample_name" >&2
-                            exit 1
-                        fi
-                        
-                        if (cat $Sample/*2.fastq 2>/dev/null || true; zcat $Sample/*2.fastq.gz 2>/dev/null || true; cat $Sample/*_R2.fastq 2>/dev/null || true; zcat $Sample/*_R2.fastq.gz 2>/dev/null || true) > $intermediate_output/$sample_name/${sample_name}_2.fastq; then
-                            if [ ! -s $intermediate_output/$sample_name/${sample_name}_2.fastq ]; then
-                                echo "Error: Merged R2 fastq file is empty for sample $sample_name" >&2
-                                exit 1
-                            fi
-                        else
-                            echo "Error: Failed to merge R2 fastq files for sample $sample_name" >&2
-                            exit 1
-                        fi
+                        cat $Sample/*1.fastq > $intermediate_output/$sample_name/${sample_name}_1.fastq
+                        cat $Sample/*2.fastq > $intermediate_output/$sample_name/${sample_name}_2.fastq
                         
                         # Quality Control (QC) by "fastp".
                         fastp -q ${11} -u ${12} -l ${13} -g -x -r -W ${14} -M ${15} -w ${16} -i $intermediate_output/$sample_name/${sample_name}_1.fastq -o $intermediate_output/$sample_name/${sample_name}_clean_1.fastq -I $intermediate_output/$sample_name/${sample_name}_2.fastq -O $intermediate_output/$sample_name/${sample_name}_clean_2.fastq -h $intermediate_output/$sample_name/${sample_name}_report.html -j $intermediate_output/$sample_name/${sample_name}_fastp.json 2> $intermediate_output/$sample_name/${sample_name}_fastp _report.txt
@@ -213,22 +132,7 @@ if [[ "$2" == "Designated_samples" ]];then
                     
                     # Handle single-end reads.
                     elif [[ "$4" == "single" ]];then
-                        # Check for fastq files (.fastq or .fastq.gz)
-                        if ! (ls $Sample/*.fastq >/dev/null 2>&1 || ls $Sample/*.fastq.gz >/dev/null 2>&1); then
-                            echo "Error: No fastq files (*.fastq or *.fastq.gz) found in $Sample" >&2
-                            exit 1
-                        fi
-                        
-                        # Merge .fastq and .fastq.gz files
-                        if (cat $Sample/*.fastq 2>/dev/null || true; zcat $Sample/*.fastq.gz 2>/dev/null || true) > $intermediate_output/$sample_name/${sample_name}.fastq; then
-                            if [ ! -s $intermediate_output/$sample_name/${sample_name}.fastq ]; then
-                                echo "Error: Merged fastq file is empty for sample $sample_name" >&2
-                                exit 1
-                            fi
-                        else
-                            echo "Error: Failed to merge fastq files for sample $sample_name" >&2
-                            exit 1
-                        fi
+                        cat $Sample/*.fastq > $intermediate_output/$sample_name/${sample_name}.fastq
 
                         fastp -q ${11} -u ${12} -l ${13} -g -x -r -W ${14} -M ${15} -w ${16} -i $intermediate_output/$sample_name/${sample_name}.fastq -o $intermediate_output/$sample_name/${sample_name}_clean.fastq -h $intermediate_output/$sample_name/${sample_name}_report.html -j $intermediate_output/$sample_name/${sample_name}_fastp.json 2> $intermediate_output/$sample_name/${sample_name}_fastp _report.txt
 
@@ -308,35 +212,15 @@ if [[ "$2" == "Designated_samples" ]];then
         PathSplit=(${6//\// })
         ProjectName=${PathSplit[-2]}
         echo "$ProjectName is partial prefix of matrix output files."
-        
-        # Check if we have any RSEM results
-        if ! find $intermediate_output -name "*.genes.results" | read -r; then
-            echo "Error: No RSEM gene results found. Pipeline may have failed silently." >&2
-            exit 1
-        fi
 
         rsem-generate-data-matrix $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_rawCounts.txt
         rsem-generate-data-matrix $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_rawCounts.txt
-        
-        # Verify output files are not empty
-        if [ ! -s $matrix_path/${ProjectName}_GeneMat_rawCounts.txt ]; then
-            echo "Error: Gene matrix is empty. Check if samples were processed correctly." >&2
-            exit 1
-        fi
         
         # Call shell function to generate TPM and FPKM matrices
         generate_matrix_from_rsem 5 $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
         generate_matrix_from_rsem 5 $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
         generate_matrix_from_rsem 6 $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
         generate_matrix_from_rsem 6 $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
-        
-        echo "========================================="
-        echo "Pipeline completed successfully!"
-        echo "Output matrices location: $matrix_path"
-        echo "Gene matrix (raw counts): ${ProjectName}_GeneMat_rawCounts.txt"
-        echo "Gene matrix (TPM): ${ProjectName}_GeneMat_TPM.txt"
-        echo "Gene matrix (FPKM): ${ProjectName}_GeneMat_FPKM.txt"
-        echo "========================================="
     fi
 
 # You can run all the samples at once.
@@ -371,58 +255,15 @@ elif [[ "$2" == "All_samples" ]];then
             mkdir -p $intermediate_output/$sample_name
 
             if [ "$4" = "pair" ];then
-                # Check for fastq files (.fastq or .fastq.gz) with R1/R2 pattern
-                if ! (ls $Sample/*1.fastq >/dev/null 2>&1 || ls $Sample/*1.fastq.gz >/dev/null 2>&1 || ls $Sample/*_R1.fastq >/dev/null 2>&1 || ls $Sample/*_R1.fastq.gz >/dev/null 2>&1); then
-                    echo "Error: No R1 fastq files (*1.fastq, *1.fastq.gz, *_R1.fastq, or *_R1.fastq.gz) found in $Sample" >&2
-                    exit 1
-                fi
-                if ! (ls $Sample/*2.fastq >/dev/null 2>&1 || ls $Sample/*2.fastq.gz >/dev/null 2>&1 || ls $Sample/*_R2.fastq >/dev/null 2>&1 || ls $Sample/*_R2.fastq.gz >/dev/null 2>&1); then
-                    echo "Error: No R2 fastq files (*2.fastq, *2.fastq.gz, *_R2.fastq, or *_R2.fastq.gz) found in $Sample" >&2
-                    exit 1
-                fi
-                
-                # Merge .fastq and .fastq.gz files
-                if (cat $Sample/*1.fastq 2>/dev/null || true; zcat $Sample/*1.fastq.gz 2>/dev/null || true; cat $Sample/*_R1.fastq 2>/dev/null || true; zcat $Sample/*_R1.fastq.gz 2>/dev/null || true) > $intermediate_output/$sample_name/${sample_name}_1.fastq; then
-                    if [ ! -s $intermediate_output/$sample_name/${sample_name}_1.fastq ]; then
-                        echo "Error: Merged R1 fastq file is empty for sample $sample_name" >&2
-                        exit 1
-                    fi
-                else
-                    echo "Error: Failed to merge R1 fastq files for sample $sample_name" >&2
-                    exit 1
-                fi
-                
-                if (cat $Sample/*2.fastq 2>/dev/null || true; zcat $Sample/*2.fastq.gz 2>/dev/null || true; cat $Sample/*_R2.fastq 2>/dev/null || true; zcat $Sample/*_R2.fastq.gz 2>/dev/null || true) > $intermediate_output/$sample_name/${sample_name}_2.fastq; then
-                    if [ ! -s $intermediate_output/$sample_name/${sample_name}_2.fastq ]; then
-                        echo "Error: Merged R2 fastq file is empty for sample $sample_name" >&2
-                        exit 1
-                    fi
-                else
-                    echo "Error: Failed to merge R2 fastq files for sample $sample_name" >&2
-                    exit 1
-                fi
+                cat $Sample/*1.fastq > $intermediate_output/$sample_name/${sample_name}_1.fastq
+                cat $Sample/*2.fastq > $intermediate_output/$sample_name/${sample_name}_2.fastq
 
                 fastp -q ${11} -u ${12} -l ${13} -g -x -r -W ${14} -M ${15} -w ${16} -i $intermediate_output/$sample_name/${sample_name}_1.fastq -o $intermediate_output/$sample_name/${sample_name}_clean_1.fastq -I $intermediate_output/$sample_name/${sample_name}_2.fastq -O $intermediate_output/$sample_name/${sample_name}_clean_2.fastq -h $intermediate_output/$sample_name/${sample_name}_report.html -j $intermediate_output/$sample_name/${sample_name}_fastp.json 2> $intermediate_output/$sample_name/${sample_name}_fastp _report.txt
 
                 hisat2 -p ${17} -x $7 -1 $intermediate_output/$sample_name/${sample_name}_clean_1.fastq -2 $intermediate_output/$sample_name/${sample_name}_clean_2.fastq -S $intermediate_output/$sample_name/${sample_name}_Alignment-unsorted.sam 2> $intermediate_output/$sample_name/${sample_name}_hisat2_Mapping_Rate.txt
             
             elif [ "$4" = "single" ];then
-                # Check for fastq files (.fastq or .fastq.gz)
-                if ! (ls $Sample/*.fastq >/dev/null 2>&1 || ls $Sample/*.fastq.gz >/dev/null 2>&1); then
-                    echo "Error: No fastq files (*.fastq or *.fastq.gz) found in $Sample" >&2
-                    exit 1
-                fi
-                
-                # Merge .fastq and .fastq.gz files
-                if (cat $Sample/*.fastq 2>/dev/null || true; zcat $Sample/*.fastq.gz 2>/dev/null || true) > $intermediate_output/$sample_name/${sample_name}.fastq; then
-                    if [ ! -s $intermediate_output/$sample_name/${sample_name}.fastq ]; then
-                        echo "Error: Merged fastq file is empty for sample $sample_name" >&2
-                        exit 1
-                    fi
-                else
-                    echo "Error: Failed to merge fastq files for sample $sample_name" >&2
-                    exit 1
-                fi
+                cat $Sample/*.fastq > $intermediate_output/$sample_name/${sample_name}.fastq
 
                 fastp -q ${11} -u ${12} -l ${13} -g -x -r -W ${14} -M ${15} -w ${16} -i $intermediate_output/$sample_name/${sample_name}.fastq -o $intermediate_output/$sample_name/${sample_name}_clean.fastq -h $intermediate_output/$sample_name/${sample_name}_report.html -j $intermediate_output/$sample_name/${sample_name}_fastp.json 2> $intermediate_output/$sample_name/${sample_name}_fastp _report.txt
 
@@ -499,33 +340,13 @@ elif [[ "$2" == "All_samples" ]];then
     PathSplit=(${6//\// })
     ProjectName=${PathSplit[-2]}
     echo "$ProjectName is partial prefix of matrix output files."
-    
-    # Check if we have any RSEM results
-    if ! find $intermediate_output -name "*.genes.results" | read -r; then
-        echo "Error: No RSEM gene results found. Pipeline may have failed silently." >&2
-        exit 1
-    fi
 
     rsem-generate-data-matrix $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_rawCounts.txt
     rsem-generate-data-matrix $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_rawCounts.txt
-    
-    # Verify output files are not empty
-    if [ ! -s $matrix_path/${ProjectName}_GeneMat_rawCounts.txt ]; then
-        echo "Error: Gene matrix is empty. Check if samples were processed correctly." >&2
-        exit 1
-    fi
 
     # Call shell function to generate TPM and FPKM matrices
     generate_matrix_from_rsem 5 $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_TPM.txt
     generate_matrix_from_rsem 5 $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_TPM.txt
     generate_matrix_from_rsem 6 $intermediate_output/*/*.genes.results > $matrix_path/${ProjectName}_GeneMat_FPKM.txt
     generate_matrix_from_rsem 6 $intermediate_output/*/*.isoforms.results > $matrix_path/${ProjectName}_TransMat_FPKM.txt
-    
-    echo "========================================="
-    echo "Pipeline completed successfully!"
-    echo "Output matrices location: $matrix_path"
-    echo "Gene matrix (raw counts): ${ProjectName}_GeneMat_rawCounts.txt"
-    echo "Gene matrix (TPM): ${ProjectName}_GeneMat_TPM.txt"
-    echo "Gene matrix (FPKM): ${ProjectName}_GeneMat_FPKM.txt"
-    echo "========================================="
-fi
+fi              

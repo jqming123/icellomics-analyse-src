@@ -9,13 +9,14 @@
 # $6:     cellranger localmema
 # $7:     Selected sample list [ sample1-sample2-sample3 ]
 # $8:     10X Genomics library construction strategies [ 3_end_v1 | 3_end_v2 | 3_end_v3 | 3_end_v3.1 | 5_end_v1 | 5_end_v2 ]
+# $9:     cellranger create-bam [ true | false ]
 #############################################################################################################################
 
 # Build the path of intermediate output file and expression matrixes.
 single_project_path=$(dirname "$3")
 intermediate_output=${single_project_path}/2_output
 matrix_path=${single_project_path}/3_expression_result
-mkdir -p $intermediate_output && mkdir -p $matrix_path
+mkdir $intermediate_output && mkdir $matrix_path
 
 # The path of core scripts.
 CORE_SCRIPTS_PATH=$(cd $(dirname $0) && pwd)
@@ -39,6 +40,9 @@ CORE_SCRIPTS_PATH=$(cd $(dirname $0) && pwd)
 
 # The library construction of 10X genomics is not clear. Maybe it is 3' or 5'.
 barcode_array=($(cat ${CORE_SCRIPTS_PATH}/config/10X_Genomics_Barcodes/*.txt | awk '{print $1}'))
+
+# cellranger create-bam parameter (default: true)
+create_bam=${9:-true}
 
 # When you run all samples in your project, this control flow is chosen.
 if [[ "$1" == "All_samples" ]];then
@@ -73,7 +77,7 @@ if [[ "$1" == "All_samples" ]];then
             done
 
             # The fastq files whose name have been changed will be put in the dir.
-            mkdir -p $intermediate_output/$sample_name
+            mkdir $intermediate_output/$sample_name
 
             if [[ "$2" == "sra" ]];then
                 for fastq_file in `ls -1 $Sample/*.fastq`
@@ -172,6 +176,7 @@ if [[ "$1" == "All_samples" ]];then
             # Generating the matrix...
             cellranger count \
             --id=${sample_name} \
+            --create-bam=${create_bam} \
             --sample=${sample_name} \
             --transcriptome=$4 \
             --fastqs=$intermediate_output/${sample_name} \
@@ -195,6 +200,7 @@ elif [[ "$1" == "Designated_samples" ]];then
     do
         cellranger count \
         --id=${each_sample} \
+        --create-bam=${create_bam} \
         --sample=${each_sample} \
         --transcriptome=$4 \
         --fastqs=$intermediate_output/${each_sample} \

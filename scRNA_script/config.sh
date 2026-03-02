@@ -56,7 +56,7 @@ case "${REF_NAME}" in
     REF_GTF="$REF_DIR/CriGri-PICRH-1.0_Ensemble/Cricetulus_griseus_picr.CriGri-PICRH-1.0.115.gtf"
     REF_BED="$REF_DIR/CriGri-PICRH-1.0_Ensemble/CriGri-PICRH-1.0_Ensemble.115.for_scRNA.ref.bed"
     HISAT2_INDEX="$REF_DIR/CriGri-PICRH-1.0_Ensemble/hisat2_index/genome"
-    RSEM_INDEX="$REF_DIR/CriGri-PICRH-1.0_Ensemble/rsem.index"
+    RSEM_INDEX="$REF_DIR/CriGri-PICRH-1.0_Ensemble/rsem.index/reference"
     STAR_INDEX="$REF_DIR/CriGri-PICRH-1.0_Ensemble/star.index"
     CELLRANGER_INDEX="$REF_DIR/CriGri-PICRH-1.0_Ensemble/cellranger_index"
     ;;
@@ -66,7 +66,7 @@ case "${REF_NAME}" in
     REF_GTF="$REF_DIR/hg38_Ensemble/Homo_sapiens.GRCh38.115.gtf"
     REF_BED="$REF_DIR/hg38_Ensemble/Homo_sapiens.GRCh38.115.for_scRNA.ref.bed"
     HISAT2_INDEX="$REF_DIR/hg38_Ensemble/hisat2_index/genome"
-    RSEM_INDEX="$REF_DIR/hg38_Ensemble/rsem.index"
+    RSEM_INDEX="$REF_DIR/hg38_Ensemble/rsem.index/reference"
     STAR_INDEX="$REF_DIR/hg38_Ensemble/star.index"
     CELLRANGER_INDEX="$REF_DIR/hg38_Ensemble/cellranger_index"
     ;;

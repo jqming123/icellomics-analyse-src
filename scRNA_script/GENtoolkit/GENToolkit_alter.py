@@ -189,7 +189,7 @@ class TenXMatrix():
     """
     Generate 10X matrixes.
     """
-    def __init__(self, designated_all, read_type, raw_data_path, cellranger_index, cellranger_localcores, cellranger_localmem, sample_list):
+    def __init__(self, designated_all, read_type, raw_data_path, cellranger_index, cellranger_localcores, cellranger_localmem, sample_list, cellranger_create_bam):
         self.designated_all = designated_all
         self.read_type = read_type
         self.raw_data_path = raw_data_path
@@ -197,14 +197,15 @@ class TenXMatrix():
         self.cellranger_localcores = cellranger_localcores
         self.cellranger_localmem = cellranger_localmem
         self.sample_list = sample_list
+        self.cellranger_create_bam = cellranger_create_bam
 
     def TenX(self):
         """
         Run the script on the local computer (independent node).
         """
         script_path = os.path.join(SCRIPT_DIR, '10XMatrix.sh')
-        os.system('bash %s %s %s %s %s %s %s %s' \
-            % (script_path, self.designated_all, self.read_type, self.raw_data_path, self.cellranger_index, self.cellranger_localcores, self.cellranger_localcores, self.sample_list))
+        os.system('bash %s %s %s %s %s %s %s %s %s' \
+            % (script_path, self.designated_all, self.read_type, self.raw_data_path, self.cellranger_index, self.cellranger_localcores, self.cellranger_localmem, self.sample_list, self.cellranger_create_bam))
 
 
 class DropSeqinDropMatrix():
@@ -276,6 +277,7 @@ def main():
     parser.add_argument('--CellrangerIndex', '-ci', type = str, help = "The absolute path of cellranger index, for example, ../cellranger_index")
     parser.add_argument('--CellrangerLocalCores', '-clc', type = int, default = 12, help = "Caution! Caution! Caution! The default localcores may not be appropriate all the time, you can adjust the localcores according to https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count.")
     parser.add_argument('--CellrangerLocalMem', '-clm', type = int, default = 64, help = "Caution! Caution! Caution! The default localmem may not be enough all the time, you can adjust the localmem according to https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count.")
+    parser.add_argument('--CreateBam', '-cb', type = str, default = "true", help = "Whether cellranger count should create BAM. [ true | false ]")
 
     # Partial parameters of Drop-seq or inDrop.
     parser.add_argument('--DropTag_p', '-dp', type = int, default = 12, help = "The thread number of dropTag process.")
@@ -345,6 +347,7 @@ def main():
     cellrangerIndex = args.CellrangerIndex
     cellrangerLocalCores = args.CellrangerLocalCores
     cellrangerLocalMem = args.CellrangerLocalMem
+    cellrangerCreateBam = args.CreateBam
 
     # Partial parameter of Drop-seq, or inDrop v1, v2, v3.
     DROPTAG_p = args.DropTag_p
@@ -355,7 +358,7 @@ def main():
     # Pass parameters. -- Upstream analysis
     bulkSingleCellReferenceGenomeIndex = BulkSingleCellReferenceGenomeIndex(indexProjectPath, hisat2ThreadNum, rsemThreadNum, referenceGenomeFasta, referenceGenomeGtf, starPath)
     bulkSmartSeqMatrix = BulkSmartSeqMatrix(buildLibraryType, designatedAll, sampleList, sequencingType, readType, rawData, hisat2Index, rsemIndex, bedFile, fasterqDumpThread, FASTP_q, FASTP_u, FASTP_l, FASTP_W, FASTP_M, FASTP_w, HISAT2_p, samtoolsThread, rsemThread, starPath, generateMatrix)
-    tenXMatrix = TenXMatrix(designatedAll, readType, rawData, cellrangerIndex, cellrangerLocalCores, cellrangerLocalMem, sampleList)
+    tenXMatrix = TenXMatrix(designatedAll, readType, rawData, cellrangerIndex, cellrangerLocalCores, cellrangerLocalMem, sampleList, cellrangerCreateBam)
     dropSeqinDropMatrix = DropSeqinDropMatrix(buildLibraryType, designatedAll, sampleList, readType, rawData, DROPTAG_p, starIndex, starRunThreadN, referenceGenomeGtf, dropReport_m)
 
     # Record the start time of the index-building process.

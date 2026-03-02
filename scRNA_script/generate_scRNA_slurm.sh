@@ -55,7 +55,6 @@ if [[ ! -f "$SHARED_CONFIG" ]]; then
   exit 1
 fi
 
-proj_name="$(basename "$proj_dir")"
 cfg="$proj_dir/$PRJ_CONFIG_NAME"
 
 if [[ ! -f "$cfg" ]]; then
@@ -68,12 +67,9 @@ fi
 set -a
 # shellcheck disable=SC1090
 source "$cfg"
-set +a
-
 # load shared config (requires REF_NAME)
 REF_NAME="$PROJ_REF_NAME"
 export REF_NAME
-set -a
 # shellcheck disable=SC1090
 source "$SHARED_CONFIG"
 set +a
