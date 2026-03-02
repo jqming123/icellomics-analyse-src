@@ -36,28 +36,28 @@ fi
 
 # 2. 根据 REF_NAME 设置参考基因组相关文件的具体路径
 case "${REF_NAME}" in
-    "CriGri-PICRH-1.0")
-        ## CHO NCBI 基因组配置 
-        REF_GENOME="${REF_DIR}/CriGri-PICRH-1.0/GCF_003668045.3_CriGri-PICRH-1.0_genomic.fna"
-        ## 参考基因组 FASTA 索引文件 (.fai) 的路径
-        REF_FAI="${REF_DIR}/CriGri-PICRH-1.0/GCF_003668045.3_CriGri-PICRH-1.0_genomic.fna.fai"
-        ## 染色体名称 (NCBI RefSeq accession), 使用.fai文件中的名称
-        main_chrs=(
-            NC_048595.1
-            NC_048596.1
-            NC_048597.1
-            NC_048598.1
-            NC_048599.1
-            NC_048600.1
-            NC_048601.1
-            NC_048602.1
-            NC_048603.1
-            NC_048604.1
-        )
-        VEP_SPECIES="cricetulus_griseus_picr_merged"
-        ## 基因组版本名称 (必须与VEP缓存中的文件夹名称匹配)
-        export GENOME_ASSEMBLY="CriGri-PICRH-1.0"
-        ;;
+#    "CriGri-PICRH-1.0") 
+#        ## CHO NCBI 基因组配置 （已弃用）
+#        REF_GENOME="${REF_DIR}/CriGri-PICRH-1.0/GCF_003668045.3_CriGri-PICRH-1.0_genomic.fna"
+#        ## 参考基因组 FASTA 索引文件 (.fai) 的路径
+#        REF_FAI="${REF_DIR}/CriGri-PICRH-1.0/GCF_003668045.3_CriGri-PICRH-1.0_genomic.fna.fai"
+#        ## 染色体名称 (NCBI RefSeq accession), 使用.fai文件中的名称
+#        main_chrs=(
+#            NC_048595.1
+#            NC_048596.1
+#            NC_048597.1
+#            NC_048598.1
+#            NC_048599.1
+#            NC_048600.1
+#            NC_048601.1
+#            NC_048602.1
+#            NC_048603.1
+#            NC_048604.1
+#        )
+#        VEP_SPECIES="cricetulus_griseus_picr_merged"
+#        ## 基因组版本名称 (必须与VEP缓存中的文件夹名称匹配)
+#        export GENOME_ASSEMBLY="CriGri-PICRH-1.0"
+#        ;;
 
     "CH_Ensemble")
         ## CHO Ensemble基因组配置 
@@ -77,8 +77,8 @@ case "${REF_NAME}" in
             10
             X
         )
-        VEP_SPECIES="cricetulus_griseus_picr"
         ## 基因组版本名称 (必须与VEP缓存中的文件夹名称匹配)
+        VEP_SPECIES="cricetulus_griseus_picr"
         export GENOME_ASSEMBLY="CriGri-PICRH-1.0"
         ;;
 
@@ -113,13 +113,105 @@ case "${REF_NAME}" in
             Y
             MT
         )
-        ## 这里填的名称后面要核实一下
-        VEP_SPECIES="homo_sapiens"
         ## 基因组版本名称 (必须与VEP缓存中的文件夹名称匹配)
+        VEP_SPECIES="homo_sapiens"
         export GENOME_ASSEMBLY="GRCh38"
         ;;
+        
+    "Cattle_ARS-UCD2.0_Ensemble")
+        ## 家牛 (Bos taurus) ARS-UCD2.0 Ensembl 基因组配置
+        REF_GENOME="${REF_DIR}/Cattle_E_ARSUCD2/Bos_taurus.ARS-UCD2.0.dna.toplevel.fa"
+        ## 参考基因组 FASTA 索引文件 (.fai) 的路径
+        REF_FAI="${REF_DIR}/Cattle_E_ARSUCD2/Bos_taurus.ARS-UCD2.0.dna.toplevel.fa.fai"
+        ## 染色体名称: 家牛有 29 条常染色体 (1-29)，以及 X, Y, MT
+        main_chrs=({1..29} W Z MT)
+        ## VEP 物种名称
+        VEP_SPECIES="bos_taurus"
+        ## 基因组版本名称 (对应 Ensembl ARS-UCD2.0)
+        export GENOME_ASSEMBLY="ARS-UCD2.0"
+        ;;
+        
+    "Chicken_E_GRCg7b")
+        ## 鸡 (Ensembl GRCg7b) 配置
+        REF_GENOME="${REF_DIR}/Chicken_E_GRCg7b/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.dna.toplevel.fa"
+        
+        ## 参考基因组 FASTA 索引文件 (.fai) 的路径
+        REF_FAI="${REF_DIR}/Chicken_E_GRCg7b/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.dna.toplevel.fa.fai"
+        
+        ## 染色体名称, 使用.fai文件中的名称 (1-39, W, Z, MT)
+        main_chrs=({1..39} W Z MT)
+        
+        ## 基因组版本名称 (用于VEP等工具)
+        VEP_SPECIES="gallus_gallus"
+        export GENOME_ASSEMBLY="bGalGal1.mat.broiler.GRCg7b"
+        ;;
+        
+    "Dog_E_UUGSD")
+        ## 家犬 (German Shepherd Dog - UU_Cfam_GSD_1.0) 配置
+    
+        REF_GENOME="${REF_DIR}/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa"
+        
+        ## 参考基因组 FASTA 索引文件 (.fai) 的路径
+        REF_FAI="${REF_DIR}/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa.fai"
+        
+        ## 染色体名称, 包含 1-38 号常染色体和 X 性染色体
+        main_chrs=({1..38} X)
+        
+        ## 基因组版本名称 (对应 Ensembl 命名规范)
+        VEP_SPECIES="canis_lupus_familiarisgsd"
+        export GENOME_ASSEMBLY="UU_Cfam_GSD_1.0"
+        ;;
+        
+    "GreenMonkey_E_ChlSab1.1")
+        ## Green Monkey (Ensembl ChlSab1.1) 基因组配置
+        REF_GENOME="${REF_DIR}/GreenMonkey_E_ChlSab1.1/Chlorocebus_sabaeus.ChlSab1.1.dna.toplevel.fa"
+
+        ## 参考基因组 FASTA 索引文件 (.fai) 的路径
+        REF_FAI="${REF_DIR}/GreenMonkey_E_ChlSab1.1/Chlorocebus_sabaeus.ChlSab1.1.dna.toplevel.fa.fai"
+
+        ## 主染色体名称
+        main_chrs=({1..29} X Y MT)
+
+        ## VEP 物种名称
+        VEP_SPECIES="chlorocebus_sabaeus"
+
+        ## 基因组版本（必须匹配 VEP cache assembly 名称）
+        export GENOME_ASSEMBLY="ChlSab1.1"
+        ;;
+        
+    "Mouse_E_GRCm39")
+        ## 小鼠 (Mus musculus - GRCm39 Ensembl) 配置
+        REF_GENOME="${REF_DIR}/Mouse_E_GRCm39/Mus_musculus.GRCm39.dna.toplevel.fa"
+        
+        ## 参考基因组 FASTA 索引文件 (.fai) 的路径
+        REF_FAI="${REF_DIR}/Mouse_E_GRCm39/Mus_musculus.GRCm39.dna.toplevel.fa.fai"
+        
+        ## 染色体名称：包含 1-19 号常染色体，以及 X, Y, MT
+        main_chrs=({1..19} X Y MT)
+    
+        ## 基因组版本名称
+        VEP_SPECIES="mus_musculus"
+        export GENOME_ASSEMBLY="GRCm39"
+        ;;
+        
+    "Pig_E_Sscrofa11.1")
+        ## 猪 (Sus scrofa - Sscrofa11.1 Ensembl) 配置
+        REF_GENOME="${REF_DIR}/Pig_E_Sscrofa11.1/Sus_scrofa.Sscrofa11.1.dna.toplevel.fa"
+        
+        ## 参考基因组 FASTA 索引文件 (.fai) 的路径
+        REF_FAI="${REF_DIR}/Pig_E_Sscrofa11.1/Sus_scrofa.Sscrofa11.1.dna.toplevel.fa.fai"
+        
+        ## 染色体名称：包含 1-18 号常染色体，以及 X, Y, MT
+        main_chrs=({1..18} X Y MT)
+        
+        ## 基因组版本名称
+        VEP_SPECIES="sus_scrofa"
+        export GENOME_ASSEMBLY="Sscrofa11.1"
+        ;;
+        
+        
     *)
-        # 3. 兜底处理：如果输入的 REF_NAME 不在上述列表中，报错退出
+        # 兜底处理：如果输入的 REF_NAME 不在上述列表中，报错退出
         echo "错误: 未识别的基因组名称 '${REF_NAME}'。" >&2
         echo "当前支持的选项有: CriGri-PICRH-1.0, hg38" >&2
         exit 1
