@@ -23,7 +23,7 @@
     - 预构建的参考基因组索引
 
 重要提示:
-    请务必在运行前检查并修改脚本顶部的 `CONFIG` 字典以适应您的环境和需求。
+    请务必在运行前检查同一目录下的config.py文件是否配置
 """
 
 
@@ -33,65 +33,12 @@ import sys
 import argparse
 import textwrap
 
-# -----------------------------------------------------------------
-# 配置区域: 所有可调整的参数都定义在这里
-# -----------------------------------------------------------------
-# 修改此处的字典值即可调整脚本行为，无需触碰下方的核心逻辑代码。
-REF_BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome"
-
-CONFIG = {
-    # 1. 路径设置
-    "paths": {
-        "sra_data_root": '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_rawdata',
-        "project_results_root": '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result',
-        "main_script_path": '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/trs_script/bulkRNA-seq_E4_v2.sh',
-        # "custom_bin_path": '/gpfs/zhaowm_group/gaoxiaojing/software/miniforge3/bin:/p300s/zhaowm_group/kongdm/workspace/BIG/sra/.pixi/envs/default/bin:/p300s/zhaowm_group/tangbx/software/sratoolkit.3.1.0-centos_linux64/bin'
-        # pixi似乎不应该按下面的用法使用
-        # sratoolkit的路径已经在PATH变量里了
-        "custom_bin_path": '/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/bin:/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/pixi_0.59.0/trs_env/.pixi/envs/default/bin'
-    },
-
-    # 2. SLURM作业调度系统设置
-    "slurm_settings": {
-        # "partition": 'vmcore128',
-        "partition": 'corexd192',
-        "time": '7-00:00:00',  # D-HH:MM:SS 格式 
-        "log_dir": '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/logs',
-    },
-
-
-    # 3. 工具和资源参数
-    "tool_params": {
-        "threads": 8,
-        "memory_gb": 60
-    },
-
-    # 4. 参考基因组设置
-    "reference_genomes": {
-        "CriGri-PICRH-1.0": { # 中国仓鼠卵巢细胞（已弃用）
-            "star_index": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0","star.index"),
-            "kallisto_gene_idx": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0","kallisto.index","GCF_003668045.3_CriGri-PICRH-1.0_genomic.gene.fa.idx"),
-            "kallisto_transcript_idx": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0","kallisto.index","GCF_003668045.3_CriGri-PICRH-1.0_genomic.transcript.fa.idx"),
-            "rsem_ref_prefix": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0","rsem.index","reference")
-        },
-        "CH_Ensemble": { # 中国仓鼠卵巢细胞Ensemble
-            "star_index": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0_Ensemble","star.index"),
-            "kallisto_gene_idx": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0_Ensemble","kallisto.index","CriGri-PICRH-1.0.115.gene.idx"),
-            "kallisto_transcript_idx": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0_Ensemble","kallisto.index","CriGri-PICRH-1.0.115.transcript.idx"),
-            "rsem_ref_prefix": os.path.join(REF_BASE_DIR,"CriGri-PICRH-1.0_Ensemble","rsem.index","reference")
-        },
-        "hg38_Ensemble": { # 人类
-            "star_index": os.path.join(REF_BASE_DIR,"hg38_Ensemble","star.index"),
-            "kallisto_gene_idx": os.path.join(REF_BASE_DIR,"hg38_Ensemble","kallisto.index","Homo_sapiens.GRCh38.dna_sm.primary_assembly.gene.fa.idx"),
-            "kallisto_transcript_idx": os.path.join(REF_BASE_DIR,"hg38_Ensemble","kallisto.index","Homo_sapiens.GRCh38.dna_sm.primary_assembly.transcript.fa.idx"),
-            "rsem_ref_prefix": os.path.join(REF_BASE_DIR,"hg38_Ensemble","rsem.index","reference")
-        },
-        # 在这里添加更多物种...
-    }
-
-
-}
-
+# 从独立的配置文件中导入 CONFIG 字典
+try:
+    from config import CONFIG
+except ImportError:
+    print("错误: 找不到配置文件 'config.py'。请确保它与此脚本在同一目录下。")
+    sys.exit(1)
 
 # -----------------------------------------------------------------
 # 核心逻辑区域: 通常无需修改此部分代码
@@ -109,7 +56,6 @@ def generate_script_content(srr_name, project_name, ref_name, config):
         ref = config['reference_genomes'][ref_name]
     except KeyError:
         print(f"严重错误: 在CONFIG中未找到名为 '{ref_name}' 的参考基因组。")
-        # 可以选择优雅地退出或跳过
         return None 
 
     # 构建动态路径
@@ -285,8 +231,10 @@ def main():
                 
                 # 检查 generate_script_content 是否成功返回内容 (例如，如果ref_name无效)
                 if script_content is None:
-                    print(f"  -> 错误: 未能为 {srr_name} 生成脚本。请检查参考基因组名称 '{ref_name}' 是否在CONFIG中正确定义。")
-                    continue
+                    print(f"\n[致命错误]: 未能在配置中找到 '{ref_name}'。")
+                    print(f"发生错误的行为: {line}")
+                    print("程序已终止，未生成后续脚本。")
+                    sys.exit(1)  # 1 表示非正常退出
 
                 # 写入文件
                 script_path = f"{srr_name}.sh"
