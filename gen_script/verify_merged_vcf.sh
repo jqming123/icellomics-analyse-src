@@ -33,6 +33,8 @@ SCOPE="$3"
 
 echo "当前项目名称 (PROJECT_NAME): ${PROJECT_NAME}"
 
+export REF_NAME="dont_need_ref"
+
 # --- 引入项目配置文件 ---
 if [ -f "./config.sh" ]; then
     source ./config.sh
@@ -69,14 +71,14 @@ esac
 
 # 设置范围和文件名
 case "$SCOPE" in
-    all)
-        MERGED_FILE_NAME="all_${VCF_SUFFIX}_with_scaffolds.vcf.gz"
-        SOURCE_FILES_PATTERN="${INPUT_DIR}/*.filtered.${VCF_SUFFIX}.vcf.gz"
-        DESCRIPTION="所有 ${VCF_SUFFIX^^} (包括 unplaced scaffolds)"
-        ;;
+#    all)
+#        MERGED_FILE_NAME="all_${VCF_SUFFIX}_with_scaffolds.vcf.gz"
+#        SOURCE_FILES_PATTERN="${INPUT_DIR}/*.filtered.${VCF_SUFFIX}.vcf.gz"
+#        DESCRIPTION="所有 ${VCF_SUFFIX^^} (包括 unplaced scaffolds)"
+#        ;;
     chrs_only)
         MERGED_FILE_NAME="main_chrs_${VCF_SUFFIX}.vcf.gz"
-        SOURCE_FILES_PATTERN="${INPUT_DIR}/NC_*.filtered.${VCF_SUFFIX}.vcf.gz"
+        SOURCE_FILES_PATTERN="${INPUT_DIR}/*.filtered.${VCF_SUFFIX}.vcf.gz"
         DESCRIPTION="仅主染色体 ${VCF_SUFFIX^^}"
         ;;
     *)
