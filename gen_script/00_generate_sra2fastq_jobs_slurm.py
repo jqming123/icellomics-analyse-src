@@ -46,7 +46,7 @@ SLURM_TIME = "240:00:00"        # 作业最长运行时间
 SLURM_NODES = "1"               # 请求节点数 
 SLURM_NTASKS_PER_NODE = "1"     # 每个节点启动的任务数 (通常为1，除非作业本身是多任务并行)
 SLURM_CPUS_PER_TASK = "8"       # 每个任务的核心数 (与config.sh中的THREADS保持一致)
-SLURM_MEM = "40gb"              # 请求内存
+SLURM_MEM = "64gb"              # 请求内存
 
 # --- 确保必要的目录存在 ---
 os.makedirs(GENERATED_SCRIPTS_DIR, exist_ok=True)

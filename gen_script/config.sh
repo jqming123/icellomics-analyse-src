@@ -96,7 +96,7 @@ case "${REF_NAME}" in
         ## 参考基因组 FASTA 索引文件 (.fai) 的路径
         REF_FAI="${REF_DIR}/Cattle_E_ARSUCD2/Bos_taurus.ARS-UCD2.0.dna.toplevel.fa.fai"
         ## 染色体名称: 家牛有 29 条常染色体 (1-29)，以及 X, Y, MT
-        main_chrs=({1..29} W Z MT)
+        main_chrs=({1..29} X Y MT)
         ## VEP 物种名称
         VEP_SPECIES="bos_taurus"
         ## 基因组版本名称 (对应 Ensembl ARS-UCD2.0)
@@ -180,7 +180,13 @@ case "${REF_NAME}" in
         VEP_SPECIES="sus_scrofa"
         export GENOME_ASSEMBLY="Sscrofa11.1"
         ;;
-        
+    "dont_need_ref")
+        REF_GENOME=""
+        REF_FAI=""
+        main_chrs=()
+        VEP_SPECIES=""
+        export GENOME_ASSEMBLY=""
+        ;;
         
     *)
         # 兜底处理：如果输入的 REF_NAME 不在上述列表中，报错退出

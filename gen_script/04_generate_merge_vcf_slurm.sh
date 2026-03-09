@@ -31,6 +31,8 @@ else
     exit 1
 fi
 
+echo "当前使用的队列 (QUEUE_NAME): ${QUEUE_NAME}"
+
 # --- 路径定义 ---
 INPUT_DIR="${RESULTS_DIR}/06_vcf_filtered"
 OUTPUT_DIR="${RESULTS_DIR}/07_vcf_merged"

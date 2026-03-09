@@ -29,6 +29,9 @@ else
     exit 1
 fi
 
+echo "当前使用的队列 (QUEUE_NAME): ${QUEUE_NAME}"
+
+
 # --- 路径定义 ---
 # 输入: 07_vcf_merged 目录下的主染色体文件
 INPUT_DIR="${RESULTS_DIR}/07_vcf_merged"

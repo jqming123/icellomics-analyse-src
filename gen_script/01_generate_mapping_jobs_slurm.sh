@@ -34,6 +34,8 @@ else
     exit 1
 fi
 
+echo "当前使用的队列 (QUEUE_NAME): ${QUEUE_NAME}"
+
 # 输出目录定义（与你原来保持一致）
 BAM_DIR="${RESULTS_DIR}/02_bam"
 GVCF_DIR="${RESULTS_DIR}/03_gvcf"

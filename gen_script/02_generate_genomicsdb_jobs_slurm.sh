@@ -28,6 +28,8 @@ else
     exit 1
 fi
 
+echo "当前使用的队列 (QUEUE_NAME): ${QUEUE_NAME}"
+
 # --- 路径定义 ---
 # GenomicsDB 的主输出目录
 DB_DIR="${RESULTS_DIR}/04_genomicsdb"
@@ -111,7 +113,7 @@ echo "Start time: " && date
 source "${CONDA_PROFILE_PATH}"
 conda activate "${GENOME_ENV_NAME}"
 
-gatk --java-options "-Xmx${MEM_LARGE} -Xms${MEM_MEDIUM}" GenomicsDBImport \\
+gatk --java-options "-Xmx${MEM_LARGE_M4} -Xms${MEM_MEDIUM}" GenomicsDBImport \\
   --sample-name-map "${GVCF_LIST}" \\
   --genomicsdb-workspace-path "${DB_DIR}/${region}" \\
   --tmp-dir "${DB_DIR}/tmp" \\
