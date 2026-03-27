@@ -22,8 +22,8 @@ LOG_ROOT="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG
 
 # ==================== 2. Slurm 资源配置 (在此修改参数) ====================
 PARTITION="corexd192"      # 队列/分区名称 (-p)
-MEMORY="64G"             # 内存限制 (--mem)
-CPU_CORES="8"            # CPU 核心数 (-c)
+MEMORY="16G"             # 内存限制 (--mem)
+CPU_CORES="4"            # CPU 核心数 (-c)
 TIME_LIMIT="24:00:00"    # 时间限制 (可选)
 
 # ==================== 3. 内部函数: 生成 Slurm 脚本 ====================

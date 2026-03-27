@@ -95,36 +95,46 @@ export PERL5LIB="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/RN
 ### 1. fastp: 质控和过滤 ###
 echo "[Step 1/4] Running fastp for quality control..."
 mkdir -p "${out_dir}/${sample_id}/fastp"
-# 检查是否存在以_1.fastq.gz或_2.fastq.gz结尾的文件
-PE_raw=$(find "${fastq_dir}/${sample_id}/reads/" -type f \( -name "${sample_id}_1.fastq.gz" -o -name "${sample_id}_2.fastq.gz" \))
-# 检查是否存在以.fastq.gz结尾的文件
-SE_raw=$(find "${fastq_dir}/${sample_id}/reads/" -type f -name "${sample_id}.fastq.gz")
 
-# 判断是双端(PE)还是单端(SE)数据
-if [[ -n "$PE_raw" && -z "$SE_raw" ]]; then
+# 定义文件路径变量，方便后续引用和判断
+raw_r1="${fastq_dir}/${sample_id}/reads/${sample_id}_1.fastq.gz"
+raw_r2="${fastq_dir}/${sample_id}/reads/${sample_id}_2.fastq.gz"
+raw_se="${fastq_dir}/${sample_id}/reads/${sample_id}.fastq.gz"
+
+# 检查是否存在双端文件
+if [[ -f "$raw_r1" && -f "$raw_r2" ]]; then
   echo "...Processing Paired-End (PE) data..."
+  
+  # 如果同时存在没有编号的 SE 文件，则将其删掉
+  if [[ -f "$raw_se" ]]; then
+    echo "WARNING: Found extra unnumbered file ${sample_id}.fastq.gz, deleting it to proceed with PE analysis."
+    rm "$raw_se"
+  fi
+
   paired_end=0
   fastp -g -q 5 -u 50 -n 5 -w "${ncpus}" \
-    -i "${fastq_dir}/${sample_id}/reads/${sample_id}_1.fastq.gz" \
-    -I "${fastq_dir}/${sample_id}/reads/${sample_id}_2.fastq.gz" \
+    -i "$raw_r1" \
+    -I "$raw_r2" \
     -o "${out_dir}/${sample_id}/fastp/${sample_id}.clean.R1.fastq.gz" \
     -O "${out_dir}/${sample_id}/fastp/${sample_id}.clean.R2.fastq.gz" \
     -j "${out_dir}/${sample_id}/fastp/${sample_id}_fastp.json" \
     -h "${out_dir}/${sample_id}/fastp/${sample_id}_fastp.html" \
     -R "${sample_id}_fastp_report"
 
-elif [[ -z "$PE_raw" && -n "$SE_raw" ]]; then
+# 如果不存在双端文件，但存在单端文件
+elif [[ -f "$raw_se" ]]; then
   echo "...Processing Single-End (SE) data..."
   paired_end=1
   fastp -g -q 5 -u 50 -n 5 -w "${ncpus}" \
-    -i "${fastq_dir}/${sample_id}/reads/${sample_id}.fastq.gz" \
+    -i "$raw_se" \
     -o "${out_dir}/${sample_id}/fastp/${sample_id}.clean.fastq.gz" \
     -j "${out_dir}/${sample_id}/fastp/${sample_id}_fastp.json" \
     -h "${out_dir}/${sample_id}/fastp/${sample_id}_fastp.html" \
     -R "${sample_id}_fastp_report"
 
 else
-  echo "ERROR: Raw sequencing file does not exist or has a wrong name!"
+  echo "ERROR: Raw sequencing file does not exist or naming is incorrect!"
+  echo "Expected PE: $raw_r1 and $raw_r2 OR SE: $raw_se"
   exit 1
 fi
 

@@ -22,10 +22,10 @@
 
 
 # 定义变量
-PROJECT_ID="PRJNA599947"
-CL_NAME="CHO"
+PROJECT_ID="PRJNA730716"
+CL_NAME="CEF"
 PROJECT_NAME="${PROJECT_ID}_${CL_NAME}"
-REFERENCE_GENOME="CH_Ensemble"
+REFERENCE_GENOME="Chicken_E_GRCg7b"
 
 cd /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/EQ_jobs
 # 创建目录并进入
@@ -56,7 +56,7 @@ SRA_FILE_COUNT=$(find "${RAWDATA_BASE_DIR}" -type f -name "*.sra" | wc -l)
 
 # 2. 统计原始 sra_runid.txt 文件中的 Run ID 数量（即行数）
 echo "正在统计 '${ORIGINAL_SRA_RUNID_FILE}' 中的 Run ID 数量..."
-RUNID_COUNT=$(wc -l < "${ORIGINAL_SRA_RUNID_FILE}") 
+RUNID_COUNT=$(grep -c "[^[:space:]]" "${ORIGINAL_SRA_RUNID_FILE}") 
 
 echo "发现 .sra 文件数量: ${SRA_FILE_COUNT}"
 echo "发现 sra_runid.txt 中的 Run ID 数量: ${RUNID_COUNT}"
