@@ -3,11 +3,14 @@
 # 1. 指定工作目录路径
 WORK_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects"
 
-# 2. 定义要处理的项目列表（空格分隔）
-# 您可以在括号内添加或删除项目名称
-PROJECTS=(
-PRJDB10440_HEK293 PRJEB20596_HEK293 PRJEB23952_HEK293 PRJEB55318_HEK293 PRJEB78913_HEK293
-)
+# 2. 从命令行参数获取项目列表
+if [ $# -eq 0 ]; then
+    echo "错误: 请提供至少一个项目名称作为参数"
+    echo "用法: $0 项目1 [项目2 项目3 ...]"
+    exit 1
+fi
+
+PROJECTS=("$@")
 
 # 切换到指定的工作目录，如果失败则退出
 cd "$WORK_DIR" || { echo "错误: 无法进入目录 $WORK_DIR"; exit 1; }

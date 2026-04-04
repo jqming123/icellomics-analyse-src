@@ -25,13 +25,13 @@ PROJECT_DIR="${BASE_DIR}/${PROJECT_NAME}"
 export TMP_DIR="${PROJECT_DIR}/tmp" 
 
 # --- Reference Genome Configuration ---
-# 根据 REF_NAME 设置路径及基因组参数 (如 MACS2 用的 GSIZE)
+# 根据 REF_NAME 设置路径及基因组参数 (如 MACS3 用的 GSIZE)
 case "${REF_NAME}" in
 #    "CriGri-PICRH-1.0") ## CHO 仓鼠基因组配置 (已弃用)
 #        REF_DIR="${RESOURCES_DIR}/ref_genome/CriGri-PICRH-1.0"
 #        export BOWTIE2_INDEX="${REF_DIR}/GCF_003668045.3_CriGri-PICRH-1.0_genomic"
 #        export REF_GENOME="${REF_DIR}/GCF_003668045.3_CriGri-PICRH-1.0_genomic.fna"
-#        # MACS2 genome size for CHO
+#        # MACS3 effective genome size for CHO
 #        export GSIZE="2366634374"
 #        ;;
 
@@ -39,7 +39,7 @@ case "${REF_NAME}" in
         REF_DIR="${RESOURCES_DIR}/ref_genome/CriGri-PICRH-1.0_Ensembl"
         export BOWTIE2_INDEX="${REF_DIR}/Cricetulus_griseus_picr.CriGri-PICRH-1.0.dna.toplevel"
         export REF_GENOME="${REF_DIR}/Cricetulus_griseus_picr.CriGri-PICRH-1.0.dna.toplevel.fa"
-        # MACS2 genome size for CHO
+        # MACS3 effective genome size for CHO
         export GSIZE="2366634374"
         ;;
 
@@ -48,7 +48,7 @@ case "${REF_NAME}" in
         REF_DIR="${RESOURCES_DIR}/ref_genome/hg38_Ensembl"
         export BOWTIE2_INDEX="${REF_DIR}/Homo_sapiens.GRCh38.dna_sm.primary_assembly"
         export REF_GENOME="${REF_DIR}/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
-        # MACS2 genome size: 'hs' is shortcut for 2,913,022,398 (GRCh38)
+        # MACS3 effective genome size: 'hs' is shortcut for 2,913,022,398 (GRCh38)
         export GSIZE="hs"
         ;;
     "Cattle_E_ARSUCD2")
@@ -56,7 +56,7 @@ case "${REF_NAME}" in
         REF_DIR="${RESOURCES_DIR}/ref_genome/Cattle_E_ARSUCD2"
         export BOWTIE2_INDEX="${REF_DIR}/Bos_taurus.ARS-UCD2.0.dna.toplevel"
         export REF_GENOME="${REF_DIR}/Bos_taurus.ARS-UCD2.0.dna.toplevel.fa"
-        # MACS2 genome size 
+        # MACS3 effective genome size 
         export GSIZE="2770686120"
         ;;
     "Chicken_E_GRCg7b")
@@ -64,7 +64,7 @@ case "${REF_NAME}" in
         REF_DIR="${RESOURCES_DIR}/ref_genome/Chicken_E_GRCg7b"
         export BOWTIE2_INDEX="${REF_DIR}/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.dna.toplevel"
         export REF_GENOME="${REF_DIR}/Gallus_gallus.bGalGal1.mat.broiler.GRCg7b.dna.toplevel.fa"
-        # MACS2 genome size (待填写)
+        # MACS3 effective genome size (待填写)
         export GSIZE="1053332251"
         ;;
     "Dog_E_UUGSD")
@@ -72,7 +72,7 @@ case "${REF_NAME}" in
         REF_DIR="${RESOURCES_DIR}/ref_genome/Dog_E_UUGSD"
         export BOWTIE2_INDEX="${REF_DIR}/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel"
         export REF_GENOME="${REF_DIR}/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa"
-        # MACS2 genome size (待填写)
+        # MACS3 effective genome size (待填写)
         export GSIZE=""
         ;;
     "GreenMonkey_E_ChlSab1.1")
@@ -80,7 +80,7 @@ case "${REF_NAME}" in
         REF_DIR="${RESOURCES_DIR}/ref_genome/GreenMonkey_E_ChlSab1.1"
         export BOWTIE2_INDEX="${REF_DIR}/Chlorocebus_sabaeus.ChlSab1.1.dna.toplevel"
         export REF_GENOME="${REF_DIR}/Chlorocebus_sabaeus.ChlSab1.1.dna.toplevel.fa"
-        # MACS2 genome size (待填写)
+        # MACS3 effective genome size (待填写)
         export GSIZE=""
         ;;
     "Mouse_E_GRCm39")
@@ -88,7 +88,7 @@ case "${REF_NAME}" in
         REF_DIR="${RESOURCES_DIR}/ref_genome/Mouse_E_GRCm39"
         export BOWTIE2_INDEX="${REF_DIR}/Mus_musculus.GRCm39.dna.toplevel"
         export REF_GENOME="${REF_DIR}/Mus_musculus.GRCm39.dna.toplevel.fa"
-        # MACS2 genome size (待填写，这个印象中有缩写可用)
+        # MACS3 effective genome size (待填写，这个印象中有缩写可用)
         export GSIZE=""
         ;;
     "Pig_E_Sscrofa11.1")
@@ -96,7 +96,7 @@ case "${REF_NAME}" in
         REF_DIR="${RESOURCES_DIR}/ref_genome/Pig_E_Sscrofa11.1"
         export BOWTIE2_INDEX="${REF_DIR}/Sus_scrofa.Sscrofa11.1.dna.toplevel"
         export REF_GENOME="${REF_DIR}/Sus_scrofa.Sscrofa11.1.dna.toplevel.fa"
-        # MACS2 genome size (待填写)
+        # MACS3 effective genome size (待填写)
         export GSIZE=""
         ;;
     "dont_need_ref")
@@ -125,6 +125,7 @@ THREADS=8
 MEM_SUPERLARGE="120G"
 MEM_LARGE="64G"
 MEM_MEDIUM="32G"
+MEM_SMALL="16G"
 
 # QUEUE_NAME="corexd192"
 QUEUE_NAME="core56"

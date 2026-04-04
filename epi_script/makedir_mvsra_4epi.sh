@@ -10,24 +10,10 @@ target_root="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects"
 # ==========================================================
 # 指定当前处理的细胞系名称
 cell_line="HEK293"
-
+ 
 # 指定属于该细胞系的 Bioproject ID 列表
 bioprojects=(
-PRJDB10440 
-PRJEB55318 
-PRJEB78913 
-PRJEB20596 
-PRJEB23952 
-PRJNA578731 
-PRJNA724674 
-PRJNA728969 
-PRJNA790998 
-PRJNA808389 
-PRJNA818016 
-PRJNA1269939 
-PRJNA380283 
-PRJNA534075 
-PRJNA270853 
+PRJNA733683
 )
 # ==========================================================
 
@@ -61,7 +47,7 @@ for bioproject in "${bioprojects[@]}"; do
   if [ -d "$src_dir" ]; then
     # 检查源目录是否为空
     if [ "$(ls -A "$src_dir")" ]; then
-      echo "Moving data from $src_dir to $target_data_dir"
+      echo "Moving data from ${src_dir} to ${target_root}/${target_data_dir}"
       # 将源目录下所有内容（SRRxxx文件夹、id文件等）移至目标 0_data 下
       mv "$src_dir"/* "$target_data_dir/"
     else

@@ -21,25 +21,31 @@ if [ ! -f "${CONFIG_PATH}" ]; then
 fi
 source "${CONFIG_PATH}"
 
+echo "当前项目：$PROJECT_NAME"
+echo "当前指定的参考基因组：$REF_NAME"
+echo "当前指定的队列：$QUEUE_NAME"
+
 # --- sample_run_map.tsv 路径 ---
 MAP_FILE="${PROJECT_DIR}/0_data/sample_run_map.tsv"
 
 if [ ! -f "${MAP_FILE}" ]; then
-    echo "错误: 未找到 sample_run_map.tsv: ${MAP_FILE}"
+    echo "error: 未找到 sample_run_map.tsv: ${MAP_FILE}"
     exit 1
 fi
 
 dos2unix $MAP_FILE
+TOTAL_JOBS=$(awk -F'\t' '{print $1}' "${MAP_FILE}" | sort -u | wc -l)
+echo "检测到 $TOTAL_JOBS 个唯一的 Biosample，准备生成脚本..."
 
 # --- 定义输出目录 ---
-JOB_DIR="${PROJECT_DIR}/2_jobs"
-LOG_DIR="${PROJECT_DIR}/3_logs"
+JOB_DIR="${PROJECT_DIR}/2_jobs/align_pool"
+LOG_DIR="${PROJECT_DIR}/3_logs/align_pool"
 RESULTS_DIR="${PROJECT_DIR}/1_result"
 FASTQ_DIR="${RESULTS_DIR}/0_fastq"
 ALIGN_DIR="${RESULTS_DIR}/1_alignment"
-POOLED_DIR="${RESULTS_DIR}/2_tagalign"
+RESULT_DIR="${RESULTS_DIR}/2_tagalign"
 
-mkdir -p "${JOB_DIR}" "${LOG_DIR}" "${ALIGN_DIR}" "${POOLED_DIR}" "${TMP_DIR}"
+mkdir -p "${JOB_DIR}" "${LOG_DIR}" "${ALIGN_DIR}" "${RESULT_DIR}" "${TMP_DIR}"
 
 echo "正在解析 sample_run_map.tsv ..."
 # 表格无表头。按第一列分组（第一列是BIOSAMPLE_ID，第二列是RunID）
@@ -70,7 +76,6 @@ do
     RUN_IDS=(${RUN_ID_STR})
 
     JOB_SCRIPT_PATH="${JOB_DIR}/align_pool_${BIOSAMPLE_ID}.sh"
-    echo "生成: ${JOB_SCRIPT_PATH}"
 
     cat > "${JOB_SCRIPT_PATH}" <<EOF
 #!/bin/bash
@@ -123,10 +128,10 @@ if [ "\$NUM_RUNS" -gt 1 ]; then
     python "\${EPI_SCRIPT_DIR}/poolTagAligns.py" \\
         "${BIOSAMPLE_ID}" \\
         "\${TAGALIGN_FILES[@]}"
-    mv "./${BIOSAMPLE_ID}.pooled.tn5.tagAlign.gz" "${POOLED_DIR}/${BIOSAMPLE_ID}.tn5.tagAlign.gz"
+    mv "./${BIOSAMPLE_ID}.pooled.tn5.tagAlign.gz" "${RESULT_DIR}/${BIOSAMPLE_ID}.tn5.tagAlign.gz"
 elif [ "\$NUM_RUNS" -eq 1 ]; then
     echo "--- 单 Run 处理 ---"
-    mv "\${TAGALIGN_FILES[0]}" "${POOLED_DIR}/${BIOSAMPLE_ID}.tn5.tagAlign.gz"
+    mv "\${TAGALIGN_FILES[0]}" "${RESULT_DIR}/${BIOSAMPLE_ID}.tn5.tagAlign.gz"
 fi
 
 conda deactivate
@@ -135,9 +140,12 @@ echo "=========================================================="
 echo "Job finished on \$(date)"
 echo "=========================================================="
 EOF
-
+    echo "已生成: align_pool_${BIOSAMPLE_ID}.sh"
+    ((COUNT++))
     chmod +x "${JOB_SCRIPT_PATH}"
+
 
 done
 
-echo "✅ 所有作业脚本生成完成！"
+echo "所有作业脚本生成完成！总计生成脚本数量：$TOTAL_JOBS"
+echo "脚本所在路径：$JOB_DIR"

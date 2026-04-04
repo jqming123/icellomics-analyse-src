@@ -46,32 +46,32 @@ COUNT=0
 for sample_dir in "${SRA_DIR}"/*; do
     # 确保是目录
     if [ -d "${sample_dir}" ]; then
-        sample_id=$(basename "${sample_dir}")
-        SRA_FILE="${sample_dir}/${sample_id}.sra"
+        run_id=$(basename "${sample_dir}")
+        SRA_FILE="${sample_dir}/${run_id}.sra"
 
         # 检查 SRA 文件是否存在
         if [ ! -f "${SRA_FILE}" ]; then
-            echo "警告: 跳过 ${sample_id}，未在文件夹中找到 .sra 文件。"
+            echo "警告: 跳过 ${run_id}，未在文件夹中找到 .sra 文件。"
             continue
         fi
 
-        JOB_SCRIPT_PATH="${SUB_JOB_DIR}/sra2fastq_${sample_id}.sh"
+        JOB_SCRIPT_PATH="${SUB_JOB_DIR}/sra2fastq_${run_id}.sh"
         
         # 生成单个样本的 SLURM 脚本
         cat > "${JOB_SCRIPT_PATH}" <<EOF
 #!/bin/bash
-#SBATCH --job-name=s2f_${sample_id}
+#SBATCH --job-name=s2f_${run_id}
 #SBATCH --partition=${QUEUE_NAME}
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=${THREADS}
 #SBATCH --mem=${MEM_LARGE}
 #SBATCH --time=7-00:00:00
-#SBATCH --output=${LOG_DIR}/sra2fastq_${sample_id}_%j.log
+#SBATCH --output=${LOG_DIR}/sra2fastq_${run_id}_%j.log
 
 echo "=========================================================="
 echo "Job started on \$(date)"
-echo "Sample ID: ${sample_id}"
+echo "Sample ID: ${run_id}"
 echo "=========================================================="
 
 set -e
@@ -85,15 +85,15 @@ source "\${CONDA_PROFILE_PATH}"
 conda activate "\${EPI_CONDA_ENV_NAME}"
 
 # --- 路径设置 ---
-READS_DIR="${FASTQ_DIR}/${sample_id}/reads"
+READS_DIR="${FASTQ_DIR}/${run_id}/reads"
 mkdir -p "\${READS_DIR}"
 
 # --- 执行转换 ---
-if [ ! -f "\${READS_DIR}/${sample_id}.fastq.gz" ] && [ ! -f "\${READS_DIR}/${sample_id}_1.fastq.gz" ]; then
-    echo "正在转换: ${sample_id}"
+if [ ! -f "\${READS_DIR}/${run_id}.fastq.gz" ] && [ ! -f "\${READS_DIR}/${run_id}_1.fastq.gz" ]; then
+    echo "正在转换: ${run_id}"
     fasterq-dump -e \${SLURM_CPUS_PER_TASK} --split-3 --outdir "\${READS_DIR}" "${SRA_FILE}"
     
-    echo "正在压缩: ${sample_id}"
+    echo "正在压缩: ${run_id}"
     find "\${READS_DIR}" -name "*.fastq" -print0 | xargs -0 -P \${SLURM_CPUS_PER_TASK} pigz -f
 else
     echo "FASTQ 文件已存在，跳过转换。"

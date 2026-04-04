@@ -121,6 +121,7 @@ samtools flagstat -@ ${ncpus} -O tsv ${run_id}.nodup.bam > ${run_id}.nodup.bam.f
 
 ### TAG-Align 生成 ###
 if [ "$paired_end" -eq 0 ]; then
+  samtools sort -@ ${ncpus} -n ${run_id}.nodup.bam | \
   bedtools bamtobed -bedpe -mate1 -i ${run_id}.nodup.bam | \
   awk 'BEGIN{OFS="\t"} {printf "%s\t%s\t%s\tN\t1000\t%s\n%s\t%s\t%s\tN\t1000\t%s\n", $1,$2,$3,$9,$4,$5,$6,$10}' | \
   gzip -nc > ${run_id}.nodup.tagAlign.gz
