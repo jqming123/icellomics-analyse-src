@@ -82,7 +82,7 @@ case "${REF_NAME}" in
     "hg38_Ensembl")
         ## 人源细胞系 (Ensembl hg38) 配置
         REF_GENOME="${REF_DIR}/hg38_Ensembl/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
-        REF_FAI="${REF_DIR}//hg38_Ensembl/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.fai"
+        REF_FAI="${REF_DIR}/hg38_Ensembl/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa.fai"
         main_chrs=({1..22} X Y MT)
         
         ## 基因组版本名称 (必须与VEP缓存中的文件夹名称匹配)
@@ -191,7 +191,7 @@ case "${REF_NAME}" in
     *)
         # 兜底处理：如果输入的 REF_NAME 不在上述列表中，报错退出
         echo "错误: 未识别的基因组名称 '${REF_NAME}'。" >&2
-        echo "当前支持的选项有: CriGri-PICRH-1.0, hg38" >&2
+        echo "当前支持的选项有: CriGri-PICRH-1.0, hg38_Ensembl等，详见配置文件" >&2
         exit 1
         ;;
 esac
@@ -216,8 +216,8 @@ THREADS_VEP=16      # VEP注释可以使用的线程数
 THREADS=8
 
 # 可选队列
-# QUEUE_NAME="vmcore128"
 QUEUE_NAME="corexd192"
+# QUEUE_NAME="vmcore128"
 # QUEUE_NAME="core56"
 
 # ==================================
