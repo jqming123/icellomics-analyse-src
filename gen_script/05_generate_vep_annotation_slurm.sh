@@ -2,7 +2,7 @@
 
 # 脚本功能: 为主染色体的SNP和INDEL VCF文件生成Slurm作业脚本，用于VEP变异位点注释。
 # 运行方式: 在 resources/src/ 目录下执行 `bash 05_generate_vep_annotation_slurm.sh <PROJECT_NAME> <REF_NAME>`
-# 例如: bash 05_generate_vep_annotation_slurm.sh MyProject hg38
+# 例如: bash 05_generate_vep_annotation_slurm.sh MyProject hg38_Ensembl
 
 # --- 获取参数 ---
 if [ -z "$1" ] || [ -z "$2" ]; then
@@ -49,7 +49,7 @@ if [ -z "${VEP_SPECIES}" ]; then
     exit 1
 fi
 
-echo "正在为 ${REF_NAME} (${VEP_SPECIES}) 生成 VEP 注释作业脚本..."
+echo "正在为 ${PROJECT_NAME} (${VEP_SPECIES}) 生成 VEP 注释作业脚本..."
 
 if [ "$REF_NAME" = "CriGri-PICRH-1.0" ] ; then
     cache_arg="--merged"
