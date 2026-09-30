@@ -87,16 +87,36 @@ conda activate "\${EPI_CONDA_ENV_NAME}"
 # --- 路径设置 ---
 READS_DIR="${FASTQ_DIR}/${run_id}/reads"
 mkdir -p "\${READS_DIR}"
+RAW_SE="\${READS_DIR}/${run_id}.fastq.gz"
+RAW_R1="\${READS_DIR}/${run_id}_1.fastq.gz"
+RAW_R2="\${READS_DIR}/${run_id}_2.fastq.gz"
+
+has_incomplete_pe() {
+    { [ -f "\${RAW_R1}" ] && [ ! -f "\${RAW_R2}" ]; } || { [ ! -f "\${RAW_R1}" ] && [ -f "\${RAW_R2}" ]; }
+}
 
 # --- 执行转换 ---
-if [ ! -f "\${READS_DIR}/${run_id}.fastq.gz" ] && [ ! -f "\${READS_DIR}/${run_id}_1.fastq.gz" ]; then
+if has_incomplete_pe; then
+    echo "错误: 检测到不完整的 PE FASTQ 文件，必须同时存在 _1 和 _2 文件: \${READS_DIR}" >&2
+    exit 1
+elif [ -f "\${RAW_SE}" ] || { [ -f "\${RAW_R1}" ] && [ -f "\${RAW_R2}" ]; }; then
+    echo "FASTQ 文件已存在，跳过转换。"
+else
     echo "正在转换: ${run_id}"
     fasterq-dump -e \${SLURM_CPUS_PER_TASK} --split-3 --outdir "\${READS_DIR}" "${SRA_FILE}"
     
     echo "正在压缩: ${run_id}"
     find "\${READS_DIR}" -name "*.fastq" -print0 | xargs -0 -P \${SLURM_CPUS_PER_TASK} pigz -f
-else
-    echo "FASTQ 文件已存在，跳过转换。"
+fi
+
+if has_incomplete_pe; then
+    echo "错误: 转换后检测到不完整的 PE FASTQ 文件，必须同时存在 _1 和 _2 文件: \${READS_DIR}" >&2
+    exit 1
+fi
+
+if [ ! -f "\${RAW_SE}" ] && { [ ! -f "\${RAW_R1}" ] || [ ! -f "\${RAW_R2}" ]; }; then
+    echo "错误: 转换后未找到预期 FASTQ 文件: \${RAW_SE} 或完整的 \${RAW_R1}/\${RAW_R2}" >&2
+    exit 1
 fi
 
 conda deactivate

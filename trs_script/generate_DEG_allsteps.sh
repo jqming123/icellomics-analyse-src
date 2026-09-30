@@ -22,8 +22,8 @@ LOG_ROOT="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG
 
 # ==================== 2. Slurm 资源配置 (在此修改参数) ====================
 PARTITION="corexd192"      # 队列/分区名称 (-p)
-MEMORY="16G"             # 内存限制 (--mem)
-CPU_CORES="4"            # CPU 核心数 (-c)
+MEMORY="8G"             # 内存限制 (--mem)
+CPU_CORES="1"            # CPU 核心数 (-c)
 TIME_LIMIT="24:00:00"    # 时间限制 (可选)
 
 # ==================== 3. 内部函数: 生成 Slurm 脚本 ====================
@@ -35,7 +35,7 @@ generate_job() {
     local JOB_DIR="${JOB_ROOT}/${C_NAME}"
     local LOG_DIR="${LOG_ROOT}/${C_NAME}"
     local JOB_FILE="${JOB_DIR}/${G_NAME}.sh"
-    local LOG_FILE="${LOG_DIR}/${G_NAME}.log"
+    local LOG_FILE="${LOG_DIR}/${G_NAME}_%j.log"
 
     mkdir -p "${JOB_DIR}"
     mkdir -p "${LOG_DIR}"

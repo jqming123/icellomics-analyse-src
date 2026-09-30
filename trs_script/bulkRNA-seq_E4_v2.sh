@@ -3,17 +3,7 @@
 # ==============================================================================
 # Generic Bulk RNA-seq Analysis Pipeline (fastp, STAR, kallisto, RSEM)
 #
-# 版本: 2.0
-# 描述: 此脚本实现了一个标准的RNA-seq分析流程，已将所有物种相关的
-#       参考文件路径参数化，使其能够适用于任何细胞系或物种。
-#
-# 使用方法:
-# ./bulkRNA-seq_E4_v2.sh -i <fastq_dir> -o <out_dir> -s <sample_id> \
-#                     -c <cpus> -m <ram_gb> \
-#                     -S <star_index_dir> \
-#                     -G <kallisto_gene_idx> \
-#                     -T <kallisto_transcript_idx> \
-#                     -R <rsem_ref_prefix>
+# 版本: 2.0 (已新增自动瘦身清理中间文件功能)
 # ==============================================================================
 
 ### software vision###
@@ -285,6 +275,39 @@ else
   echo "ERROR: Transcriptome BAM file ($transcriptome_bam_file) does not exist! RSEM calculation failed."
   exit 1
 fi
+
+
+### 5. 自动瘦身中间文件 (新增核心逻辑) ###
+echo "[Step 5] Checking and cleaning up intermediate files to save disk space..."
+rsem_gene_result="${out_dir}/${sample_id}/rsem/${sample_id}_rsem.genes.results"
+
+if [ -s "$rsem_gene_result" ]; then
+  echo "  检测到核心定量结果。开始释放无用空间..."
+
+  # 1) 清理原始 FASTQ 目录 (reads 文件夹)
+  if [ -d "${fastq_dir}/${sample_id}/reads" ]; then
+    echo "  -> 正在删除原始 reads 目录..."
+    rm -rf "${fastq_dir}/${sample_id}/reads"
+  fi
+
+  # 2) 清理 fastp 质控后的 FASTQ (保留 html/json 质控报告)
+  if ls "${out_dir}/${sample_id}/fastp/"*.fastq.gz >/dev/null 2>&1; then
+    echo "  -> 正在删除 fastp 临时 fastq 文件..."
+    rm -f "${out_dir}/${sample_id}/fastp/"*.fastq.gz
+  fi
+
+  # 3) 清理 RSEM 定量使用的转录组比对 bam 文件
+  if [ -f "$transcriptome_bam_file" ]; then
+    echo "  -> 正在删除 toTranscriptome.out.bam 文件..."
+    rm -f "$transcriptome_bam_file"
+  fi
+
+  echo "  瘦身完成！只保留了核心定量结果和需要的基因组 bam/bg。"
+else
+  echo "  警告: 定量核心文件缺失或为空！已跳过清理，以保存现场排查错误。"
+  exit 1
+fi
+
 
 echo "--- Pipeline Finished: $(date) ---"
 echo "All programs completed successfully for sample ${sample_id}!"

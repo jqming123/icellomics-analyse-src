@@ -124,3 +124,4 @@ echo "End time:" && date
     os.chmod(generated_script_full_path, 0o755)
 
 print(f"\n脚本生成完毕，共 {len(sra_files)} 个。")
+print(f"\n脚本所在路径：{GENERATED_SCRIPTS_DIR}")

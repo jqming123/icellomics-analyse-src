@@ -9,12 +9,13 @@ target_root="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects"
 # 2. 细胞系和项目配置 (每次运行前修改此处！)
 # ==========================================================
 # 指定当前处理的细胞系名称
-cell_line="HEK293"
+cell_line="Hela"
  
 # 指定属于该细胞系的 Bioproject ID 列表
 bioprojects=(
-PRJNA733683
-)
+PRJEB40269
+PRJEB59931
+PRJEB79721)
 # ==========================================================
 
 # 3. 基础目录结构

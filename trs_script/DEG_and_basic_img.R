@@ -130,6 +130,18 @@ cat("  - 已移除基因 Ensembl ID 的版本号 (例如, 从 ENSG00000223972.5 
 condition_df <- read.table(condition,header = T,fill=T,na.strings = "",sep="\t")
 cat(paste0("  - 已加载分组信息文件。包含 ", nrow(condition_df), " 个样本条目。\n"))
 
+cat("表达矩阵中的样本名（列名）:\n")
+print(colnames(in_df))
+cat("\n分组文件中的样本名:\n")
+print(condition_df$sample)
+
+# 找出在分组文件中存在，但在表达矩阵中缺失的样本
+missing_samples <- setdiff(condition_df$sample, colnames(in_df))
+if (length(missing_samples) > 0) {
+  cat("\n以下样本在表达矩阵中未找到:\n")
+  print(missing_samples)
+}
+
 # 判断并修正df的sample列名
 correct_IDs_func <-function(df,colname){
   if(!colname %in% colnames(df)) {
@@ -177,6 +189,17 @@ cat(paste0("[OUTPUT] 原始 read counts 的箱线图已保存至: ", file.path(o
 cat("========================================================\n")
 cat("[INFO] 步骤 4: 执行 DESeq2 差异表达分析...\n")
 cat("========================================================\n")
+
+# --- 样本数量检查 --- 
+if (nrow(condition_df) < 3) {
+  cat(paste0("[ERROR] 样本数量不足 (仅 ", nrow(condition_df), " 个样本)。\n"))
+  cat("        DESeq2 需要至少3个样本才能进行差异表达分析（通常每组至少2个生物学重复）。\n")
+  cat("        请检查分组信息文件，确认是否遗漏了重复样本。\n")
+  cat("        如果确实没有重复样本，可以考虑使用其他方法（如 edgeR 的 exactTest）。\n")
+  stop("样本数量不足，无法执行 DESeq2 分析", call. = FALSE)
+}
+
+cat(paste0("  - 样本数量检查通过: ", nrow(condition_df), " 个样本\n"))
 
 #构建DESeq2对象dds
 dds <- DESeqDataSetFromMatrix(countData = round(cts),

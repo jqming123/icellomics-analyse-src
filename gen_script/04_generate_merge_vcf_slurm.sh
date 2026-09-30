@@ -2,7 +2,7 @@
 
 # 脚本功能: 生成四个 Slurm 作业脚本，用于分别合并 SNP 和 INDEL 的 VCF 文件。
 # 运行方式: 在 resources/src 目录下执行 `bash 04_generate_merge_vcf_slurm.sh <PROJECT_NAME> <REF_NAME>`
-# 例如: bash 04_generate_merge_vcf_slurm.sh MyProject hg38
+# 例如: bash 04_generate_merge_vcf_slurm.sh MyProject hg38_Ensembl
 
 # --- 获取参数 ---
 if [ -z "$1" ] || [ -z "$2" ]; then

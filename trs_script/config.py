@@ -24,7 +24,7 @@ CONFIG = {
 
     # 3. 工具和资源参数
     "tool_params": {
-        "threads": 8,
+        "threads": 4,
         "memory_gb": 60
     },
 

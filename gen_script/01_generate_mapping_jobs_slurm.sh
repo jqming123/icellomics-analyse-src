@@ -73,7 +73,7 @@ awk '{print $1, $2}' "${SAMPLE_LIST}" | while read -r RUN_ID SAMPLE_ID; do
 #SBATCH -N 1                               
 #SBATCH --ntasks-per-node=1                
 #SBATCH --cpus-per-task=${THREADS}         
-#SBATCH --mem=${MEM_LARGE}                 
+#SBATCH --mem=${MEM_XLARGE}                 
 #SBATCH -o ${LOG_DIR}/01_mapping_gvcf/${SAMPLE_ID}_${RUN_ID}_%j.log    
 
 set -eo pipefail
@@ -104,12 +104,32 @@ fi
 
 export _JAVA_OPTIONS="-Xmx16G"
 
+# v3.1 fix: 自适应Trimmomatic参数, 检测reads长度避免短reads被100%丢弃
+# 原因: HEADCROP:8 + MINLEN:50 要求reads至少58bp, 50bp的reads会被全部丢弃
+DETECTED_LEN=\$(zcat "\${RAW_R1}" 2>/dev/null | head -4000 | awk 'NR%4==2{sum+=length(\$0); n++} END{if(n>0) printf "%d", sum/n}' || true)
+if [ -z "\${DETECTED_LEN}" ] || [ "\${DETECTED_LEN}" -lt 1 ]; then
+    DETECTED_LEN=100
+fi
+echo "\$(date): Detected average read length for ${RUN_ID}: \${DETECTED_LEN}bp"
+
+if [ "\${DETECTED_LEN}" -le 58 ]; then
+    # 短reads (<=58bp): 去掉HEADCROP, MINLEN设为reads长度的70%
+    MIN_LEN=\$(( DETECTED_LEN * 7 / 10 ))
+    [ "\${MIN_LEN}" -lt 36 ] && MIN_LEN=36
+    TRIM_PARAMS="LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:\${MIN_LEN}"
+    echo "\$(date): Using short-read trim params (no HEADCROP, MINLEN:\${MIN_LEN}) for \${DETECTED_LEN}bp reads"
+else
+    # 正常reads (>58bp): 保持原参数
+    TRIM_PARAMS="LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 HEADCROP:8 MINLEN:50"
+    echo "\$(date): Using standard trim params (HEADCROP:8, MINLEN:50) for \${DETECTED_LEN}bp reads"
+fi
+
 echo "\$(date): Trimming ${RUN_ID}"
 trimmomatic PE -threads ${THREADS} \
   "\${RAW_R1}" "\${RAW_R2}" \
   "\${TRIM_DIR}/${RUN_ID}_clean_1.fastq" "\${TRIM_DIR}/${RUN_ID}_single_1.fastq" \
   "\${TRIM_DIR}/${RUN_ID}_clean_2.fastq" "\${TRIM_DIR}/${RUN_ID}_single_2.fastq" \
-  LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 HEADCROP:8 MINLEN:50
+  \${TRIM_PARAMS}
 
 echo "\$(date): Mapping ${RUN_ID}"
 RG="@RG\\tID:${RUN_ID}\\tSM:${SAMPLE_ID}\\tLB:\\tPL:ILLUMINA\\tPU:${RUN_ID}"
@@ -160,6 +180,14 @@ SCRIPT_DIR="${SCRIPT_DIR}"
 source "\${SCRIPT_DIR}/config.sh"
 source "\${CONDA_PROFILE_PATH}"
 conda activate "\${GENOME_ENV_NAME}"
+
+export GATK_MARKDUP_XMX="${GATK_MARKDUP_XMX}"
+export GATK_HC_XMX="${GATK_HC_XMX}"
+export GATK_XMS="${GATK_XMS}"
+
+echo "GATK_MARKDUP_XMX=\${GATK_MARKDUP_XMX}"
+echo "GATK_HC_XMX=\${GATK_HC_XMX}"
+echo "GATK_XMS=\${GATK_XMS}"
 
 SAMPLE="${SAMPLE_ID}"
 SAMPLE_BAM_DIR="\${RESULTS_DIR}/02_bam/\${SAMPLE}"

@@ -1,84 +1,50 @@
 #!/usr/bin/env bash
 
-# @File       :1_generate_alignment_job.sh
-# @Description:Generate SLURM scripts automatically from sample_run_map.tsv
-# @Usage      :bash 1_generate_alignment_job.sh <PROJECT_NAME> <REF_NAME> 
+# Generate one SLURM job per biosample. Technical runs are merged within each
+# biological replicate before duplicate marking/removal.
+# Preferred sample_run_map.tsv columns:
+# biosample_id <TAB> biological_replicate <TAB> run_id [<TAB> PE|SE|AUTO]
+
+set -euo pipefail
 
 if [ "$#" -lt 2 ]; then
-    echo "错误: 参数不足！"
-    echo "用法: bash 1_generate_alignment_job.sh <PROJECT_NAME> <REF_NAME>"
+    echo "用法: bash 1_generate_alignment_job.sh <PROJECT_NAME> <REF_NAME>" >&2
     exit 1
 fi
 
 export PROJECT_NAME="$1"
 export REF_NAME="$2"
-
-# --- 加载项目配置 ---
 CONFIG_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/epi_script/epi_config.sh"
 if [ ! -f "${CONFIG_PATH}" ]; then
-    echo "错误: 配置文件未找到于 ${CONFIG_PATH}"
+    echo "错误: 配置文件未找到于 ${CONFIG_PATH}" >&2
     exit 1
 fi
 source "${CONFIG_PATH}"
 
-echo "当前项目：$PROJECT_NAME"
-echo "当前指定的参考基因组：$REF_NAME"
-echo "当前指定的队列：$QUEUE_NAME"
-
-# --- sample_run_map.tsv 路径 ---
 MAP_FILE="${PROJECT_DIR}/0_data/sample_run_map.tsv"
-
+MAP_PARSER="${EPI_SCRIPT_DIR}/atac_qc/sample_map.py"
 if [ ! -f "${MAP_FILE}" ]; then
-    echo "error: 未找到 sample_run_map.tsv: ${MAP_FILE}"
+    echo "error: 未找到 sample_run_map.tsv: ${MAP_FILE}" >&2
     exit 1
 fi
 
-dos2unix $MAP_FILE
-TOTAL_JOBS=$(awk -F'\t' '{print $1}' "${MAP_FILE}" | sort -u | wc -l)
-echo "检测到 $TOTAL_JOBS 个唯一的 Biosample，准备生成脚本..."
+dos2unix "${MAP_FILE}"
+python "${MAP_PARSER}" --map "${MAP_FILE}" --project-dir "${PROJECT_DIR}" --validate
+mapfile -t BIOSAMPLES < <(python "${MAP_PARSER}" --map "${MAP_FILE}" --list-biosamples)
+TOTAL_JOBS=${#BIOSAMPLES[@]}
 
-# --- 定义输出目录 ---
 JOB_DIR="${PROJECT_DIR}/2_jobs/align_pool"
 LOG_DIR="${PROJECT_DIR}/3_logs/align_pool"
 RESULTS_DIR="${PROJECT_DIR}/1_result"
 FASTQ_DIR="${RESULTS_DIR}/0_fastq"
 ALIGN_DIR="${RESULTS_DIR}/1_alignment"
-RESULT_DIR="${RESULTS_DIR}/2_tagalign"
+TAGALIGN_DIR="${RESULTS_DIR}/2_tagalign"
+mkdir -p "${JOB_DIR}" "${LOG_DIR}" "${ALIGN_DIR}" "${TAGALIGN_DIR}" "${TMP_DIR}"
 
-mkdir -p "${JOB_DIR}" "${LOG_DIR}" "${ALIGN_DIR}" "${RESULT_DIR}" "${TMP_DIR}"
-
-echo "正在解析 sample_run_map.tsv ..."
-# 表格无表头。按第一列分组（第一列是BIOSAMPLE_ID，第二列是RunID）
-awk -F'\t' '{print $1"\t"$2}' "${MAP_FILE}" | \
-sort | \
-awk -F'\t' '
-{
-    biosample=$1
-    run=$2
-    if (biosample in runs) {
-        runs[biosample]=runs[biosample]" "run
-    } else {
-        runs[biosample]=run
-    }
-}
-END {
-    for (b in runs) {
-        print b"\t"runs[b]
-    }
-}' | while IFS=$'\t' read -r BIOSAMPLE_ID RUN_ID_STR
-do
-
-    echo "--------------------------------------------------"
-    echo "处理 Biosample: ${BIOSAMPLE_ID}"
-    echo "RunIDs: ${RUN_ID_STR}"
-
-    # 转成数组
-    RUN_IDS=(${RUN_ID_STR})
-
+for BIOSAMPLE_ID in "${BIOSAMPLES[@]}"; do
     JOB_SCRIPT_PATH="${JOB_DIR}/align_pool_${BIOSAMPLE_ID}.sh"
-
     cat > "${JOB_SCRIPT_PATH}" <<EOF
-#!/bin/bash
+#!/usr/bin/env bash
 #SBATCH --job-name=${BIOSAMPLE_ID}_align
 #SBATCH --partition=${QUEUE_NAME}
 #SBATCH --nodes=1
@@ -88,64 +54,51 @@ do
 #SBATCH --time=7-00:00:00
 #SBATCH --output=${LOG_DIR}/align_pool_${BIOSAMPLE_ID}_%j.log
 
-echo "=========================================================="
-echo "Job started on \$(date)"
-echo "Job ID: \${SLURM_JOB_ID}"
-echo "=========================================================="
-
-set -e
-
+# nounset (-u) is deliberately not enabled here: the cluster conda
+# activate/deactivate hooks reference optional variables (ZSH_VERSION,
+# JAVA_HOME) without a default and would abort the job during activation.
+set -eo pipefail
 export PROJECT_NAME="${PROJECT_NAME}"
 export REF_NAME="${REF_NAME}"
 source "${CONFIG_PATH}"
-
 source "\${CONDA_PROFILE_PATH}"
 conda activate "\${EPI_CONDA_ENV_NAME}"
 
-RUN_IDS=(${RUN_ID_STR})
-TAGALIGN_FILES=()
+mapfile -t REPLICATE_ROWS < <(python "\${EPI_SCRIPT_DIR}/atac_qc/sample_map.py" \
+    --map "${MAP_FILE}" --project-dir "${PROJECT_DIR}" \
+    --biosample "${BIOSAMPLE_ID}" --emit-replicates)
 
-for run_id in "\${RUN_IDS[@]}"; do
-    echo "--- 开始处理 Run: \${run_id} ---"
-    
-    THREAD_MEM=\$(( ${MEM_MEDIUM%G} / ${THREADS} ))
-    
-    bash "\${EPI_SCRIPT_DIR}/ATAC_align.sh" \\
-        "${FASTQ_DIR}" \\
-        "${ALIGN_DIR}" \\
-        "\${run_id}" \\
-        "${BIOSAMPLE_ID}" \\
-        "\${SLURM_CPUS_PER_TASK}" \\
-        "\${THREAD_MEM}"
-        
-    TAGALIGN_FILES+=("${ALIGN_DIR}/\${run_id}/bowtie2/\${run_id}.tn5.tagAlign.gz")
+REP_TAGALIGNS=()
+REP_FRAGMENTS=()
+for row in "\${REPLICATE_ROWS[@]}"; do
+    IFS=$'\t' read -r replicate layout legacy run_csv <<< "\${row}"
+    IFS=',' read -r -a run_ids <<< "\${run_csv}"
+    if [ "\${legacy}" = "true" ]; then
+        echo "WARNING: legacy two-column map; all runs are processed as rep1" >&2
+    fi
+    for run_id in "\${run_ids[@]}"; do
+        THREAD_MEM=$(( ${MEM_MEDIUM%G} / ${THREADS} ))
+        bash "\${EPI_SCRIPT_DIR}/ATAC_align.sh" \
+            "${FASTQ_DIR}" "${ALIGN_DIR}" "\${run_id}" "${BIOSAMPLE_ID}" \
+            "\${SLURM_CPUS_PER_TASK}" "\${THREAD_MEM}" true
+    done
+    THREAD_MEM=$(( ${MEM_MEDIUM%G} / ${THREADS} ))
+    bash "\${EPI_SCRIPT_DIR}/ATAC_finalize_replicate.sh" \
+        "${BIOSAMPLE_ID}" "\${replicate}" "\${layout}" "${ALIGN_DIR}" "${TAGALIGN_DIR}" \
+        "\${SLURM_CPUS_PER_TASK}" "\${THREAD_MEM}" "\${run_csv}"
+    REP_TAGALIGNS+=("${TAGALIGN_DIR}/replicates/${BIOSAMPLE_ID}/${BIOSAMPLE_ID}.\${replicate}.tn5.tagAlign.gz")
+    REP_FRAGMENTS+=("${TAGALIGN_DIR}/replicates/${BIOSAMPLE_ID}/${BIOSAMPLE_ID}.\${replicate}.fragments.bed.gz")
 done
 
-NUM_RUNS=\${#RUN_IDS[@]}
-
-if [ "\$NUM_RUNS" -gt 1 ]; then
-    echo "--- 合并 \${NUM_RUNS} 个 Run 数据到 Biosample: ${BIOSAMPLE_ID} ---"
-    python "\${EPI_SCRIPT_DIR}/poolTagAligns.py" \\
-        "${BIOSAMPLE_ID}" \\
-        "\${TAGALIGN_FILES[@]}"
-    mv "./${BIOSAMPLE_ID}.pooled.tn5.tagAlign.gz" "${RESULT_DIR}/${BIOSAMPLE_ID}.tn5.tagAlign.gz"
-elif [ "\$NUM_RUNS" -eq 1 ]; then
-    echo "--- 单 Run 处理 ---"
-    mv "\${TAGALIGN_FILES[0]}" "${RESULT_DIR}/${BIOSAMPLE_ID}.tn5.tagAlign.gz"
-fi
-
+zcat -f "\${REP_TAGALIGNS[@]}" | gzip -nc > "${TAGALIGN_DIR}/${BIOSAMPLE_ID}.tn5.tagAlign.gz"
+zcat -f "\${REP_FRAGMENTS[@]}" | gzip -nc > "${TAGALIGN_DIR}/${BIOSAMPLE_ID}.fragments.bed.gz"
+printf "biosample_id\tbiological_replicates\n%s\t%s\n" "${BIOSAMPLE_ID}" "\${#REPLICATE_ROWS[@]}" \
+    > "${TAGALIGN_DIR}/${BIOSAMPLE_ID}.replicate_manifest.tsv"
 conda deactivate
-
-echo "=========================================================="
-echo "Job finished on \$(date)"
-echo "=========================================================="
 EOF
-    echo "已生成: align_pool_${BIOSAMPLE_ID}.sh"
-    ((COUNT++))
     chmod +x "${JOB_SCRIPT_PATH}"
-
-
+    echo "已生成: ${JOB_SCRIPT_PATH}"
 done
 
-echo "所有作业脚本生成完成！总计生成脚本数量：$TOTAL_JOBS"
-echo "脚本所在路径：$JOB_DIR"
+echo "所有作业脚本生成完成：${TOTAL_JOBS} 个 Biosample。"
+echo "提交命令: for f in ${JOB_DIR}/*.sh; do sbatch \$f; done"

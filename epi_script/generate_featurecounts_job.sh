@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# @File       :3_generate_featurecounts_job.sh
+# @File       :generate_featurecounts_job.sh
 # @Description:Generate SLURM scripts for featureCounts (FRiP calculation) for all samples.
-# @Usage      :bash 3_generate_featurecounts_job.sh <PROJECT_NAME>
+# @Usage      :bash generate_featurecounts_job.sh <PROJECT_NAME>
 
 if [ "$#" -ne 1 ]; then
     echo "错误: 参数数量不正确！"
-    echo "用法: bash 3_generate_featurecounts_job.sh <PROJECT_NAME>"
+    echo "用法: bash generate_featurecounts_job.sh <PROJECT_NAME>"
     exit 1
 fi
 

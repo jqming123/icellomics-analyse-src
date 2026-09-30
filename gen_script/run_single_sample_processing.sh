@@ -75,7 +75,7 @@ fi
 
 # --- Step 1: MarkDuplicates ---
 echo "[`date`] MarkDuplicates..."
-gatk MarkDuplicates \
+gatk --java-options "-Xmx${GATK_MARKDUP_XMX} -Xms${GATK_XMS}" MarkDuplicates \
     -I "${INPUT_BAM}" \
     -O "${DEDUP_BAM}" \
     -M "${METRICS_FILE}" \
@@ -84,7 +84,7 @@ gatk MarkDuplicates \
 
 # --- Step 2: HaplotypeCaller to gVCF ---
 echo "[`date`] Running HaplotypeCaller..."
-gatk HaplotypeCaller \
+gatk --java-options "-Xmx${GATK_HC_XMX} -Xms${GATK_XMS}" HaplotypeCaller \
     -R "${REF_GENOME}" \
     -I "${DEDUP_BAM}" \
     -O "${GVCF_FILE}" \

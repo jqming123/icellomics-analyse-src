@@ -158,8 +158,8 @@ top_degs <- res_df %>%
   arrange(padj) %>%
   head(50)
 
-if (nrow(top_degs) == 0) {
-    cat("  - [WARNING] 未发现显著差异基因 (padj < 0.05)，无法生成热图。\n")
+if (nrow(top_degs) < 2) {
+    cat(paste0("  - [WARNING] 显著差异基因数量不足 (padj < 0.05, n = ", nrow(top_degs), ")，需要至少 2 个基因才能生成热图。\n"))
 } else {
     cat(paste0("  - 已筛选出前 ", nrow(top_degs), " 个最显著的差异基因用于绘制热图。\n"))
 

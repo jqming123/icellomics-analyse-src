@@ -198,9 +198,9 @@ esac
 
 # --- Software ---
 CONDA_PROFILE_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
-# 除VEP以外的软件全部安装在mamba环境中，运行各个脚本前都要先激活下面这个mamba环境
+# 除VEP以外的软件全部安装在genome_env环境中，运行各个脚本前都要先激活下面这个conda环境
 GENOME_ENV_NAME="genome_env"
-# VEP单独用一个环境
+# VEP单独用一个conda环境
 VEP_ENV_NAME="vep_115"
 
 
@@ -210,6 +210,11 @@ MEM_LARGE="64G"
 MEM_LARGE_M4="60G"
 MEM_MEDIUM="40G"
 MEM_SMALL="20G"
+
+# --- GATK Java heap settings for merge + gVCF jobs ---
+GATK_MARKDUP_XMX="48G"
+GATK_HC_XMX="16G"
+GATK_XMS="4G"
 
 # VEP 是一个资源密集型工具，建议为其分配独立的、更大的资源
 THREADS_VEP=16      # VEP注释可以使用的线程数
