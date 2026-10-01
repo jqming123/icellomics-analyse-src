@@ -1,3 +1,15 @@
 compress_fils_script/logs/
 scRNA_script/GENtoolkit/config/10X_Genomics_Barcodes/
 auto_submit_slurm.sh.DISABLED
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 虚拟环境
+.venv/
+venv/
+env/
