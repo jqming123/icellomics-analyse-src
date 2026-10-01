@@ -1,0 +1,152 @@
+# iCellOmics Data Processing Pipelines
+
+This repository contains the data processing and analysis scripts used to generate standardized multi-omics datasets for **iCellOmics**, a database integrating genomic, transcriptomic, epigenomic, and single-cell transcriptomic data for industrial and research cell lines.
+
+The workflows were developed for a SLURM-based high-performance computing environment and include processing pipelines for WGS/WES, bulk RNA-seq, ATAC-seq, and single-cell RNA-seq.
+
+## Features
+
+The repository contains the following major modules:
+
+- `gen_script/` — WGS/WES alignment, GATK gVCF generation, joint genotyping, SNP/Indel filtering, VCF merging, normalization, and VEP annotation.
+- `trs_script/` — bulk RNA-seq preprocessing and expression quantification, together with separate scripts for RSEM count merging, DESeq2 differential-expression analysis, and visualization.
+- `epi_script/` — ATAC-seq preprocessing, Bowtie2 alignment, duplicate removal, tagAlign generation, Tn5 correction, MACS3 peak calling, quality control, JBrowse track preparation, and database-import utilities.
+- `scRNA_script/` — single-cell RNA-seq preprocessing and downstream analysis, including 10x Genomics and other supported library types, together with cell-cycle and functional-state analyses.
+- `build_index_script_template/` — scripts for constructing reference indexes used by BWA/GATK, Bowtie2, STAR, HISAT2, Kallisto, RSEM, and Cell Ranger.
+- `vep_debug/` — utilities for identifying and troubleshooting problematic variants during VEP annotation.
+
+## Dependencies
+
+Major software used by the workflows includes:
+
+- Python 3
+- R
+- SLURM
+- SRA Toolkit
+- fastp
+- Trimmomatic
+- BWA
+- Bowtie2
+- samtools
+- bcftools
+- GATK 4
+- Ensembl VEP
+- Picard
+- BEDTools
+- MACS3
+- deepTools
+- STAR
+- Kallisto
+- RSEM
+- HISAT2
+- Cell Ranger
+- DESeq2
+
+The scripts were developed for the iCellOmics production HPC environment. File paths, Conda environments, reference resources, and SLURM resource settings should be adapted before use on another system.
+
+## Installation
+
+```bash
+git clone https://github.com/jqming123/icellomics-analyse-src.git
+cd icellomics-analyse-src
+```
+
+## Usage
+
+### WGS/WES
+
+The genome workflow processes public sequencing data from SRA/FASTQ files to filtered and VEP-annotated SNP/Indel VCF files.
+
+```bash
+cd gen_script
+
+python 00_generate_sra2fastq_jobs_slurm.py <PROJECT_NAME>
+bash 01_generate_mapping_jobs_slurm.sh <PROJECT_NAME> <REF_NAME>
+bash 02_generate_genomicsdb_jobs_slurm.sh <PROJECT_NAME> <REF_NAME>
+bash 03_generate_jointcall_jobs_slurm.sh <PROJECT_NAME> <REF_NAME>
+bash 04_generate_merge_vcf_slurm.sh <PROJECT_NAME> <REF_NAME>
+bash 05_generate_vep_annotation_slurm.sh <PROJECT_NAME> <REF_NAME>
+```
+
+### Bulk RNA-seq
+
+SLURM jobs for bulk RNA-seq preprocessing and expression quantification can be generated using:
+
+```bash
+python trs_script/GenerateRNAShell_v3.py \
+    -s <sample_information.tsv> \
+    -o <output_directory>
+```
+
+The corresponding upstream workflow uses fastp for preprocessing, STAR for genome alignment, and Kallisto and RSEM for expression quantification.
+
+Differential-expression analysis is performed separately after expression quantification. For comparisons without technical-replicate merging:
+
+```bash
+bash trs_script/generate_DEG_allsteps.sh <GROUP_NAME> <CELL_LINE>
+```
+
+For comparisons containing technical replicates:
+
+```bash
+bash trs_script/generate_DEG_allsteps_techrep.sh <GROUP_NAME> <CELL_LINE>
+```
+
+The technical-replicate workflow first merges RSEM expected counts according to the replicate mapping file and then performs DESeq2 differential-expression analysis and downstream visualization using `DEG_and_basic_img.R` and `advance_img.R`.
+
+### ATAC-seq
+
+The ATAC-seq processing workflow consists of:
+
+```bash
+bash epi_script/0_generate_sra2fastq_job.sh <PROJECT_NAME>
+bash epi_script/1_generate_alignment_job.sh <PROJECT_NAME> <REF_NAME>
+bash epi_script/2_generate_peak_calling_job.sh <PROJECT_NAME> <REF_NAME>
+```
+
+The workflow performs fastp preprocessing, Bowtie2 alignment, read filtering, duplicate handling, mitochondrial-read removal, tagAlign generation, Tn5 correction, pooling of sequencing runs belonging to the same BioSample, and MACS3 peak calling.
+
+ATAC-seq quality-control utilities are provided separately under:
+
+```text
+epi_script/atac_qc/
+```
+
+with SLURM job generation available through:
+
+```bash
+bash epi_script/6_generate_atac_qc_job.sh \
+    <PROJECT_NAME> <REF_NAME> \
+    --mode existing-results \
+    --biosample-manifest <MANIFEST.tsv>
+```
+
+### Single-cell RNA-seq
+
+Create a project-specific configuration from:
+
+```text
+scRNA_script/project.conf.template
+```
+
+and generate the corresponding SLURM jobs using:
+
+```bash
+bash scRNA_script/generate_scRNA_slurm.sh <PROJECT_NAME>
+```
+
+Additional downstream scripts used for cell-cycle and functional-state analyses are provided under:
+
+```text
+scRNA_script/scripts_used/
+```
+
+## Citation
+
+If you use these scripts or data generated by these workflows, please cite the **iCellOmics** database paper.
+
+The complete citation will be added after publication.
+
+## License
+
+This project is released under the MIT License.
