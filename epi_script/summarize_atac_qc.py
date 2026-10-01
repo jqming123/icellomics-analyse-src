@@ -74,7 +74,7 @@ from validate_atac_blacklist_resource import sha256_file
 
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-CONFIG_PATH = SCRIPT_DIR / "epi_config.sh"
+CONFIG_PATH = SCRIPT_DIR / "epi_qc_config.sh"
 CONFIG_KEYS = (
     "BASE_DIR",
     "PROJECT_DIR",
