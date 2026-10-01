@@ -107,7 +107,7 @@ def parse_args() -> argparse.Namespace:
         "ref_name_arg",
         nargs="?",
         metavar="REF_NAME",
-        help="Reference name configured in epi_config.sh, e.g. hg38_Ensembl.",
+        help="Reference name configured in epi_qc_config.sh, e.g. hg38_Ensembl.",
     )
     project_group = parser.add_mutually_exclusive_group()
     project_group.add_argument(
@@ -121,7 +121,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--ref-name",
-        help="Reference name configured in epi_config.sh. Used to resolve TSS/blacklist paths.",
+        help="Reference name configured in epi_qc_config.sh. Used to resolve TSS/blacklist paths.",
     )
     parser.add_argument(
         "--base-dir",
@@ -204,7 +204,7 @@ def parse_args() -> argparse.Namespace:
         parser.error("--mode existing-results requires --biosample-manifest; do not infer legacy inputs")
     if args.mode == "release":
         if not args.ref_name:
-            parser.error("--mode release requires --ref-name so release resources come from epi_config.sh")
+            parser.error("--mode release requires --ref-name so release resources come from epi_qc_config.sh")
         release_overrides = {
             "--blacklist-bed": args.blacklist_bed,
             "--tss-bed": args.tss_bed,
@@ -254,7 +254,7 @@ def load_ref_config(ref_name: Optional[str], project_name: Optional[str]) -> dic
         text=True,
     )
     if result.returncode != 0:
-        message = result.stderr.strip() or result.stdout.strip() or "failed to load epi_config.sh"
+        message = result.stderr.strip() or result.stdout.strip() or "failed to load epi_qc_config.sh"
         raise RuntimeError(message)
 
     config: dict[str, str] = {}
@@ -1756,7 +1756,7 @@ def main() -> int:
         project_dir = project_dir_from_args(args, ref_config)
         if args.mode == "release" and not ref_config.get("BLACKLIST_STATUS"):
             raise RuntimeError(
-                "release QC config did not provide BLACKLIST_STATUS; verify epi_config.sh"
+                "release QC config did not provide BLACKLIST_STATUS; verify epi_qc_config.sh"
             )
     except Exception as exc:
         print(f"Error: {exc}", file=sys.stderr)
