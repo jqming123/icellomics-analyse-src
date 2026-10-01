@@ -106,7 +106,7 @@ if [ "${QC_MODE}" != "existing-results" ] && { [ -n "${RUN_MANIFEST}" ] || [ -n 
 fi
 
 # The server job sources this configuration file, not the local checkout copy.
-CONFIG_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/epi_script/epi_config.sh"
+CONFIG_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/epi_script/epi_qc_config.sh"
 if [ ! -f "${CONFIG_PATH}" ]; then
     echo "错误: 配置文件未找到于 ${CONFIG_PATH}" >&2
     exit 1
