@@ -53,7 +53,7 @@ cd icellomics-analyse-src
 
 ## Usage
 
-### WGS/WES
+### WGS
 
 The genome workflow processes public sequencing data from SRA/FASTQ files to filtered and VEP-annotated SNP/Indel VCF files.
 
