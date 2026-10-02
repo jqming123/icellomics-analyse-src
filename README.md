@@ -2,7 +2,7 @@
 
 This repository contains the data processing and analysis scripts used to generate standardized multi-omics datasets for **iCellOmics**, a database integrating genomic, transcriptomic, epigenomic, and single-cell transcriptomic data for industrial and research cell lines.
 
-The workflows were developed for a SLURM-based high-performance computing environment and include processing pipelines for WGS/WES, bulk RNA-seq, ATAC-seq, and single-cell RNA-seq.
+The workflows were developed for a SLURM-based high-performance computing environment and include processing pipelines for WGS, bulk RNA-seq, ATAC-seq, and single-cell RNA-seq.
 
 ## Features
 
