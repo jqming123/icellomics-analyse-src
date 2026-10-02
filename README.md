@@ -8,7 +8,7 @@ The workflows were developed for a SLURM-based high-performance computing enviro
 
 The repository contains the following major modules:
 
-- `gen_script/` — WGS/WES alignment, GATK gVCF generation, joint genotyping, SNP/Indel filtering, VCF merging, normalization, and VEP annotation.
+- `gen_script/` — WGS alignment, GATK gVCF generation, joint genotyping, SNP/Indel filtering, VCF merging, normalization, and VEP annotation.
 - `trs_script/` — bulk RNA-seq preprocessing and expression quantification, together with separate scripts for RSEM count merging, DESeq2 differential-expression analysis, and visualization.
 - `epi_script/` — ATAC-seq preprocessing, Bowtie2 alignment, duplicate removal, tagAlign generation, Tn5 correction, MACS3 peak calling, quality control, JBrowse track preparation, and database-import utilities.
 - `scRNA_script/` — single-cell RNA-seq preprocessing and downstream analysis, including 10x Genomics and other supported library types, together with cell-cycle and functional-state analyses.
