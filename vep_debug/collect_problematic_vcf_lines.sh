@@ -16,7 +16,7 @@ set -eou pipefail
 
 # --- 配置区 ---
 # 根日志目录，脚本将从此目录开始递归查找 .log 文件
-PRJ_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO"
+PRJ_DIR="/path/to/user/CellLine/genome_projects/PRJEB39258_CHO"
 LOG_ROOT_DIR="${PRJ_DIR}/03_logs/04_vep_annotation_overlap_debug"
 # 存放原始 VCF 输入块的根目录
 VCF_CHUNKS_ROOT_DIR="${PRJ_DIR}/01_results/08_vep_annotated/vep_debug_final_round"

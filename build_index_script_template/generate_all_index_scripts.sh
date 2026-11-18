@@ -7,7 +7,7 @@ set -eo pipefail
 ########################################
 # 可配置参数
 ########################################
-REF_ROOT_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome"  # 参考基因组根目录
+REF_ROOT_PATH="/path/to/user/CellLine/resources/ref_genome"  # 参考基因组根目录
 # 主要改下面四个参数
 GENOME_NAME="Dog_E_UUGSD"                                          # 参考基因组目录名
 FASTA_FILENAME="Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa"        # 基因组 FASTA 文件名
@@ -20,7 +20,7 @@ ENV_ATAC="ATAC_E4"                                                   # bowtie2 �
 ENV_BWA="genome_env"                                                 # bwa 脚本使用的 mamba 环境
 ENV_SCRNA="scRNA_env"                                                # hisat2 / cellranger 脚本使用的 mamba 环境
 ## STAR / Kallisto / RSEM 使用，用绝对路径是为了方便RSEM_index脚本指定perl路径
-ENV_RNASEQ="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/RNAseq_E4"
+ENV_RNASEQ="/path/to/user/softwares/miniforge3/envs/RNAseq_E4"
 
 # 其他参数
 SLURM_PARTITION="corexd192"
@@ -71,7 +71,7 @@ cat >"${SCRIPT_DIR}/build_bowtie_index.sh" <<EOF
 #SBATCH --output=${LOG_BOWTIE}
 
 echo "脚本启动时间: \$(date)"
-source "/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+source "/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 conda activate ${ENV_ATAC}
 
 REF_GENOME_DIR="${GENOME_DIR}"

@@ -4,13 +4,13 @@
 #SBATCH -c 12
 #SBATCH --mem=128G
 #SBATCH -t 48:00:00
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/scRNA_projects/HEK293/PRJNA593571_HEK293/5_logs/PRJNA593571_HEK293_cycle_analysis.%j.log
+#SBATCH -o /path/to/user/CellLine/scRNA_projects/HEK293/PRJNA593571_HEK293/5_logs/PRJNA593571_HEK293_cycle_analysis.%j.log
 
 set -eo pipefail
 
-PROJECT_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/scRNA_projects/HEK293/PRJNA593571_HEK293"
-SCRIPT_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/scRNA_script/LTC/cycle_analysis"
-CONDA_ROOT="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3"
+PROJECT_PATH="/path/to/user/CellLine/scRNA_projects/HEK293/PRJNA593571_HEK293"
+SCRIPT_DIR="/path/to/user/CellLine/resources/src/scRNA_script/LTC/cycle_analysis"
+CONDA_ROOT="/path/to/user/softwares/miniforge3"
 
 source "${CONDA_ROOT}/etc/profile.d/conda.sh"
 conda activate "single_cell_1"

@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Optional
 
 
-DEFAULT_BASE_DIR = Path("/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects")
+DEFAULT_BASE_DIR = Path("/path/to/user/CellLine/epigen_projects")
 DEFAULT_MITO_CONTIGS = ("MT",)
 
 QC_COLUMNS = [

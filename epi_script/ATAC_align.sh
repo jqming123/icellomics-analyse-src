@@ -17,7 +17,7 @@ ramGB=$6       # 参数位置顺延
 #############
 
 # --- 加载项目配置 ---
-CONFIG_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/epi_script/epi_config.sh"
+CONFIG_PATH="/path/to/user/CellLine/resources/src/epi_script/epi_config.sh"
 if [ ! -f "${CONFIG_PATH}" ]; then
     echo "错误: 配置文件未找到于 ${CONFIG_PATH}"
     exit 1

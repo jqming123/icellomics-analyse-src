@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -p corexd192
 #SBATCH -J compress_bams_batch_001 # 每个作业有唯一的名称
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/compress_fils_script/logs/slurm_compress_bams_batch_001_%j.log # 日志文件包含批次名
+#SBATCH -o /path/to/user/CellLine/resources/src/compress_fils_script/logs/slurm_compress_bams_batch_001_%j.log # 日志文件包含批次名
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
@@ -14,8 +14,8 @@ get_timestamp() {
 }
 
 echo "[2025-12-16 15:31:51] --- 开始运行SLURM批处理任务: batch_001 ---"
-echo "[2025-12-16 15:31:51] 将切换到主工作目录: '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result'"
-cd "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result" || { echo "[2025-12-16 15:31:51] 错误: 无法切换到主工作目录 '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result'. 退出."; exit 1; }
+echo "[2025-12-16 15:31:51] 将切换到主工作目录: '/path/to/user/CellLine/transcriptome_projects/rna_count_result'"
+cd "/path/to/user/CellLine/transcriptome_projects/rna_count_result" || { echo "[2025-12-16 15:31:51] 错误: 无法切换到主工作目录 '/path/to/user/CellLine/transcriptome_projects/rna_count_result'. 退出."; exit 1; }
 
 # 定义此批次要处理的样本目录
 VALID_SAMPLE_DIRS=(
@@ -62,9 +62,9 @@ check_reference() {
 
 # --- 用户需要修改的部分（这些路径会直接嵌入到生成的脚本中） ---
 # 基因组参考序列（用于基因组比对文件）
-GENOME_FASTA="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
+GENOME_FASTA="/path/to/user/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
 # 转录本参考序列（用于转录组比对文件）
-TRANSCRIPTOME_FASTA="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.cdna.all.fa"
+TRANSCRIPTOME_FASTA="/path/to/user/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.cdna.all.fa"
 # -------------------------
 
 # 动态获取线程数, 若不在Slurm环境中则默认为8
@@ -90,7 +90,7 @@ echo "[$(get_timestamp)] 使用基因组参考: $GENOME_FASTA"
 echo "[$(get_timestamp)] 使用转录本参考: $TRANSCRIPTOME_FASTA"
 
 # 激活 conda 环境
-source "/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+source "/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 conda activate "RNAseq_E4"
 
 echo "[$(get_timestamp)] 开始处理当前批次的BAM文件..."

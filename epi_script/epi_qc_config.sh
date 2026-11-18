@@ -22,9 +22,9 @@ if [ -z "${REF_NAME:-}" ]; then
 fi
 
 # --- Base Directories ---
-BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects"
-RESOURCES_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources"
-JBROWSE_DATA_ROOT="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects/jbrowse2_data"
+BASE_DIR="/path/to/user/CellLine/epigen_projects"
+RESOURCES_DIR="/path/to/user/CellLine/resources"
+JBROWSE_DATA_ROOT="/path/to/user/CellLine/epigen_projects/jbrowse2_data"
 export JBROWSE_DATA_ROOT
 
 # --- Project-specific Paths ---
@@ -197,11 +197,11 @@ export PEAK_CAP="${PEAK_CAP:-500000}"
 export ATAC_TSS_ARTIFACTS="${ATAC_TSS_ARTIFACTS:-profile}"
 
 # --- Software & Environment ---
-CONDA_PROFILE_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+CONDA_PROFILE_PATH="/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 EPI_CONDA_ENV_NAME="ATAC_E4"
 
 # --- Analysis Scripts ---
-EPI_SCRIPT_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/epi_script"
+EPI_SCRIPT_DIR="/path/to/user/CellLine/resources/src/epi_script"
 
 # --- SLURM Resource Configuration ---
 THREADS=16

@@ -22,8 +22,8 @@ def main():
     cell_line = sys.argv[1]
     
     # 构建文件路径
-    input_file = f"/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG/groups/{cell_line}/{cell_line}_DEG_groups.tsv"
-    output_file = f"/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG/groups/{cell_line}/batch_generate_{cell_line}_DEGjobs_input.tsv"
+    input_file = f"/path/to/user/CellLine/transcriptome_projects/DEG/groups/{cell_line}/{cell_line}_DEG_groups.tsv"
+    output_file = f"/path/to/user/CellLine/transcriptome_projects/DEG/groups/{cell_line}/batch_generate_{cell_line}_DEGjobs_input.tsv"
     
     if not os.path.exists(input_file):
         print(f"Error: File not found - {input_file}")

@@ -28,18 +28,18 @@ CL_NAME="$2"
 
 # --- 核心路径 ---
 # 脚本所在目录
-SCRIPT_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/trs_script"
+SCRIPT_DIR="/path/to/user/CellLine/resources/src/trs_script"
 # Conda 环境路径
-CONDA_ENV="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/R_DESeq2"
+CONDA_ENV="/path/to/user/softwares/miniforge3/envs/R_DESeq2"
 # 包含所有组的根目录
-GROUPS_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG/groups"
+GROUPS_DIR="/path/to/user/CellLine/transcriptome_projects/DEG/groups"
 
 # --- 打印确认信息 (可选) ---
 echo "[INFO] Group Name: $GROUP_NAME"
 echo "[INFO] Cell Line:  $CL_NAME"
 
 # 输入目录 (RSEM结果所在位置)
-INPUT_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result"
+INPUT_DIR="/path/to/user/CellLine/transcriptome_projects/rna_count_result"
 
 # --- mergeRSEM.py 脚本固定参数 ---
 # 计数类型 (例如: expected_count, TPM, FPKM)

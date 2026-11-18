@@ -37,9 +37,9 @@ check_reference() {
 
 # --- 用户需要修改的部分（这些路径会直接嵌入到生成的脚本中） ---
 # 基因组参考序列（用于基因组比对文件）
-GENOME_FASTA="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
+GENOME_FASTA="/path/to/user/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
 # 转录本参考序列（用于转录组比对文件）
-TRANSCRIPTOME_FASTA="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.cdna.all.fa"
+TRANSCRIPTOME_FASTA="/path/to/user/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.cdna.all.fa"
 # -------------------------
 
 # 动态获取线程数, 若不在Slurm环境中则默认为8
@@ -65,7 +65,7 @@ echo "[$(get_timestamp)] 使用基因组参考: $GENOME_FASTA"
 echo "[$(get_timestamp)] 使用转录本参考: $TRANSCRIPTOME_FASTA"
 
 # 激活 conda 环境
-source "/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+source "/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 conda activate "RNAseq_E4"
 
 echo "[$(get_timestamp)] 开始处理当前批次的BAM文件..."

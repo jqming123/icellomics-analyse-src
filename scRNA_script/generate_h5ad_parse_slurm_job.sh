@@ -25,7 +25,7 @@ set -euo pipefail
 # ============================================================
 # Path constants
 # ============================================================
-BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine"
+BASE_DIR="/path/to/user/CellLine"
 SCRIPTS_DIR="${BASE_DIR}/resources/src/scRNA_script"
 IMPORT_SCRIPT="${SCRIPTS_DIR}/prepare_scrna_ds0004_import.py"
 CELL_LINE_TSV="${BASE_DIR}/resources/cell_line_metadata.tsv"
@@ -35,7 +35,7 @@ OUTPUT_BASE="${BASE_DIR}/scRNA_projects/ds0004_import/parse_output"
 JOB_OUTPUT_DIR="${BASE_DIR}/scRNA_projects/ds0004_import/slurm_jobs"
 LOG_OUTPUT_DIR="${BASE_DIR}/scRNA_projects/ds0004_import/slurm_logs"
 
-CONDA_INIT="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+CONDA_INIT="/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 CONDA_ENV="single_cell_1"
 
 # SLURM defaults

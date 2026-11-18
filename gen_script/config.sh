@@ -5,9 +5,9 @@
 # ==================================
 
 # --- Project Info ---
-BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects"
-REF_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome"
-SRC_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/gen_script"
+BASE_DIR="/path/to/user/CellLine/genome_projects"
+REF_DIR="/path/to/user/CellLine/resources/ref_genome"
+SRC_DIR="/path/to/user/CellLine/resources/src/gen_script"
 
 # PROJECT_NAME 现在期望在 sourcing 此脚本之前作为环境变量被设置。
 # 例如，在主脚本中通过 `export PROJECT_NAME="YourProject"` 设置。
@@ -197,7 +197,7 @@ case "${REF_NAME}" in
 esac
 
 # --- Software ---
-CONDA_PROFILE_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+CONDA_PROFILE_PATH="/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 # 除VEP以外的软件全部安装在genome_env环境中，运行各个脚本前都要先激活下面这个conda环境
 GENOME_ENV_NAME="genome_env"
 # VEP单独用一个conda环境
@@ -231,5 +231,5 @@ QUEUE_NAME="corexd192"
 
 # --- VEP Settings ---
 # VEP 缓存目录的绝对路径。这是VEP离线运行所必需的。
-export VEP_CACHE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/vep_cache"
+export VEP_CACHE_DIR="/path/to/user/CellLine/resources/vep_cache"
 

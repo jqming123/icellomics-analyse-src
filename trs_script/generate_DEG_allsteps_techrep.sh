@@ -11,14 +11,14 @@
 
 # ==================== 1. 基础路径配置 ====================
 # 原始脚本存放目录
-SRC_SCRIPT_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/trs_script"
+SRC_SCRIPT_DIR="/path/to/user/CellLine/resources/src/trs_script"
 # Conda 环境路径
-CONDA_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/bin/activate"
-CONDA_ENV="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/R_DESeq2"
+CONDA_PATH="/path/to/user/softwares/miniforge3/bin/activate"
+CONDA_ENV="/path/to/user/softwares/miniforge3/envs/R_DESeq2"
 
 # 作业与日志根目录
-JOB_ROOT="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG/jobs"
-LOG_ROOT="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG/logs"
+JOB_ROOT="/path/to/user/CellLine/transcriptome_projects/DEG/jobs"
+LOG_ROOT="/path/to/user/CellLine/transcriptome_projects/DEG/logs"
 
 # ==================== 2. Slurm 资源配置 (在此修改参数) ====================
 PARTITION="corexd192"      # 队列/分区名称 (-p)

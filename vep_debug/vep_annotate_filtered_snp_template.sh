@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH -p vmcore128                  # 指定作业提交的分区 (队列)
 #SBATCH -J VEP_snps                    # 作业名称 (例如: VEP_snps, VEP_indels)
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/out_file/vep_annotate_filtered_snps.out  # 标准输出重定向
-#SBATCH -e /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/err_file/vep_annotate_filtered_snps.err  # 错误输出重定向
+#SBATCH -o /path/to/user/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/out_file/vep_annotate_filtered_snps.out  # 标准输出重定向
+#SBATCH -e /path/to/user/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/err_file/vep_annotate_filtered_snps.err  # 错误输出重定向
 #SBATCH --nodes=1                         # 作业申请 1 个节点
 #SBATCH --ntasks-per-node=1               # 单节点启动 1 个任务
 #SBATCH --cpus-per-task=8    # 使用为VEP配置的线程数
@@ -12,7 +12,7 @@
 set -eo pipefail # 遇到错误立即退出，管道中的任何命令失败也退出
 
 # --- 作业执行内容 ---
-LOGFILE="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/vep_annotate_filtered_snps.log"
+LOGFILE="/path/to/user/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/vep_annotate_filtered_snps.log"
 touch "${LOGFILE}"
 exec > "${LOGFILE}" 2>&1 # 将所有标准输出和标准错误重定向到作业日志文件
 
@@ -21,13 +21,13 @@ echo "Start time: " && date
 echo "Annotating snps with VEP..."
 
 # 激活 mamba 环境 (VEP专用环境)
-source "/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+source "/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 conda activate "vep_115"
 
 # 定义路径 (在子脚本中再次定义，确保在Slurm作业环境中变量的正确性)
 # 注意：这里使用生成脚本中的变量值，因为它们在生成时就被固定了
-FILTERED_VCF="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/01_results/08_vep_annotated/main_chrs_snps.normalized.filtered.vcf.gz"
-OUTPUT_VEP_VCF="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/01_results/08_vep_annotated/main_chrs_snps.vep.filtered.vcf.gz"
+FILTERED_VCF="/path/to/user/CellLine/genome_projects/PRJEB39258_CHO/01_results/08_vep_annotated/main_chrs_snps.normalized.filtered.vcf.gz"
+OUTPUT_VEP_VCF="/path/to/user/CellLine/genome_projects/PRJEB39258_CHO/01_results/08_vep_annotated/main_chrs_snps.vep.filtered.vcf.gz"
 
 # Step 1: Normalize and Left-Align variants using bcftools norm (推荐)
 # main_chrs_snps.normalized.filtered.vcf.gz 已经进行过这一步
@@ -56,10 +56,10 @@ vep \
     --input_file "${FILTERED_VCF}" \
     --output_file "${OUTPUT_VEP_VCF}" \
     --offline --cache --merged\
-    --dir_cache "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/vep_cache" \
+    --dir_cache "/path/to/user/CellLine/resources/vep_cache" \
     --assembly "CriGri-PICRH-1.0" \
     --species "cricetulus_griseus_picr" \
-    --fasta "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/CriGri-PICRH-1.0/GCF_003668045.3_CriGri-PICRH-1.0_genomic.fna" \
+    --fasta "/path/to/user/CellLine/resources/ref_genome/CriGri-PICRH-1.0/GCF_003668045.3_CriGri-PICRH-1.0_genomic.fna" \
     --format vcf \
     --vcf \
     --compress_output bgzip \
@@ -69,8 +69,8 @@ vep \
     --fork 8 \
     --buffer_size 5000 \
     --check_ref \
-    --warning_file "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/vep_annotate_filtered_snps.warnings.txt" \
-    --stats_file "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/vep_annotate_filtered_snps.stats.html" \
+    --warning_file "/path/to/user/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/vep_annotate_filtered_snps.warnings.txt" \
+    --stats_file "/path/to/user/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation/vep_annotate_filtered_snps.stats.html" \
     --stats_html
 
 # Step 3: Index the annotated VCF file

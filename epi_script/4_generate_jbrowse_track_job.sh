@@ -19,7 +19,7 @@ fi
 export PROJECT_NAME="$1"
 export REF_NAME="$2"
 
-CONFIG_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/epi_script/epi_config.sh"
+CONFIG_PATH="/path/to/user/CellLine/resources/src/epi_script/epi_config.sh"
 if [ ! -f "${CONFIG_PATH}" ]; then
     echo "Error: config file not found at ${CONFIG_PATH}"
     exit 1

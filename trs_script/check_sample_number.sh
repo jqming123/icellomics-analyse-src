@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # 定义基础路径
-# BASE_DIR="/gpfs/zhaowm_group/gaoxiaojing/CellLine/rna_shell/"
-BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/EQ_jobs"
+# BASE_DIR="/gpfs/zhaowm_group/<USER>/CellLine/rna_shell/"
+BASE_DIR="/path/to/user/CellLine/transcriptome_projects/EQ_jobs"
 
 
 # 定义要检查的子目录列表

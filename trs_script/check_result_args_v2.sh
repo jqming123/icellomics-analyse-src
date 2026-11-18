@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # 定义基础路径
-RNA_COUNT_RESULT_BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result"
-EQ_JOBS_BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/EQ_jobs"
+RNA_COUNT_RESULT_BASE_DIR="/path/to/user/CellLine/transcriptome_projects/rna_count_result"
+EQ_JOBS_BASE_DIR="/path/to/user/CellLine/transcriptome_projects/EQ_jobs"
 
 # 检查是否提供了正确的参数数量
 if [ "$#" -ne 1 ]; then

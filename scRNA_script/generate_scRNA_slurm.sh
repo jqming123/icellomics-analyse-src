@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Generate upstream/downstream SLURM scripts (GENtoolkit)
-# Layout: /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/scRNA_projects/<BioProjectID>/
+# Layout: /path/to/user/CellLine/scRNA_projects/<BioProjectID>/
 #   1_raw/ 2_output/ 3_expression_result/ 4_jobs/ 5_logs/ project.conf
 #   slurm scripts stored in 4_jobs/, logs stored in 5_logs/
 #
@@ -28,7 +28,7 @@ set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SHARED_CONFIG="$SCRIPT_DIR/config.sh"
-PROJECT_ROOT="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/scRNA_projects"
+PROJECT_ROOT="/path/to/user/CellLine/scRNA_projects"
 PRJ_CONFIG_NAME="project.conf"
 
 if [[ $# -lt 1 ]]; then

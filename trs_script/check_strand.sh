@@ -7,7 +7,7 @@
 #   ANIMAL_REF   : ref_genome 下的基因组文件夹名，例如 Dog_E_UUGSD
 # ============================================================
 
-source /hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/bin/activate inferexp
+source /path/to/user/softwares/miniforge3/bin/activate inferexp
 
 BIOPROJECT="PRJNA979805"
 CELL_LINE="HT1080"
@@ -17,13 +17,13 @@ ANIMAL_REF="hg38_Ensembl"
 # 以下路径根据上方变量自动生成，无需修改
 # ============================================================
 
-RUN_LIST="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_rawdata/${BIOPROJECT}_${CELL_LINE}/sra_runid.txt"
+RUN_LIST="/path/to/user/CellLine/transcriptome_projects/rna_rawdata/${BIOPROJECT}_${CELL_LINE}/sra_runid.txt"
 
-BED_FILE=$(ls /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/${ANIMAL_REF}/*.bed12 2>/dev/null | head -1)
+BED_FILE=$(ls /path/to/user/CellLine/resources/ref_genome/${ANIMAL_REF}/*.bed12 2>/dev/null | head -1)
 
-BAM_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result"
+BAM_DIR="/path/to/user/CellLine/transcriptome_projects/rna_count_result"
 
-LOG_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/logs/${BIOPROJECT}_${CELL_LINE}"
+LOG_DIR="/path/to/user/CellLine/transcriptome_projects/logs/${BIOPROJECT}_${CELL_LINE}"
 LOG_FILE="${LOG_DIR}/strand_results.log"
 
 # ============================================================

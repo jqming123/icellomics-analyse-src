@@ -94,7 +94,7 @@ def generate_script_content(srr_name, project_name, ref_name, config):
         # 设置执行环境，确保可复现性
         export PATH={paths['custom_bin_path']}:$PATH
         # 设置HOME目录
-        export HOME=/home/gaoxiaojing
+        # HOME is inherited from the SLURM execution environment.
         # 设置工作目录
         export WORKING_DIR={working_dir}
         mkdir -p "$WORKING_DIR" # 确保目录存在
@@ -164,7 +164,7 @@ def generate_script_content(srr_name, project_name, ref_name, config):
 
         # 3. Run main RNA-seq analysis pipeline
         echo "步骤3: 运行核心分析流程 bulkRNA-seq_E4_v2_dUTP.sh..."
-        bash /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/trs_script/bulkRNA-seq_E4_v2_dUTP.sh \\
+        bash /path/to/user/CellLine/resources/src/trs_script/bulkRNA-seq_E4_v2_dUTP.sh \\
             -i {paths['project_results_root']} \\
             -o {paths['project_results_root']} \\
             -s {srr_name} \\

@@ -2,8 +2,8 @@
 ## 用于表观基因组数据的目录初始化与数据转移
 
 # 1. 基础路径配置
-source_root="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects/sra_rawdata"
-target_root="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects"
+source_root="/path/to/user/CellLine/epigen_projects/sra_rawdata"
+target_root="/path/to/user/CellLine/epigen_projects"
 
 # ==========================================================
 # 2. 细胞系和项目配置 (每次运行前修改此处！)

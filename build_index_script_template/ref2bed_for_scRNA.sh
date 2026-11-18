@@ -6,7 +6,7 @@
 #SBATCH -c 4
 #SBATCH --mem=64G
 #SBATCH --time=200:00:00
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/logs/Dog_E_UUGSD_ref2bed.log
+#SBATCH -o /path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/logs/Dog_E_UUGSD_ref2bed.log
 
 set -euo pipefail
 
@@ -18,9 +18,9 @@ else
   exit 1
 fi
 
-GENOME_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD"
-REF_GTF="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.115.gtf"
-REF_BED="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.115.for_scRNA.ref.bed"
+GENOME_DIR="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD"
+REF_GTF="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.115.gtf"
+REF_BED="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.115.for_scRNA.ref.bed"
 
 if [[ ! -f "${REF_GTF}" ]]; then
   echo "ERROR: GTF not found: ${REF_GTF}" >&2

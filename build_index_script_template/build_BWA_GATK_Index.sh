@@ -6,13 +6,13 @@
 #SBATCH -c 10
 #SBATCH --mem=200G
 #SBATCH --time=200:00:00
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/logs/Dog_E_UUGSD_bwa_index.log
+#SBATCH -o /path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/logs/Dog_E_UUGSD_bwa_index.log
 
 set -euo pipefail
 
-REF_GENOME_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD"
-GENOME_FASTA="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa"
-LOG_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/logs"
+REF_GENOME_DIR="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD"
+GENOME_FASTA="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa"
+LOG_DIR="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/logs"
 MAMBA_ENV_NAME="genome_env"
 
 mkdir -p ${LOG_DIR}

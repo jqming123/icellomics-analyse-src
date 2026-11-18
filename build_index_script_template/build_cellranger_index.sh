@@ -6,7 +6,7 @@
 #SBATCH -c 10
 #SBATCH --mem=200G
 #SBATCH --time=200:00:00
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/logs/Dog_E_UUGSD_cellranger_index.log
+#SBATCH -o /path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/logs/Dog_E_UUGSD_cellranger_index.log
 
 set -euo pipefail
 
@@ -18,9 +18,9 @@ else
   exit 1
 fi
 
-GENOME_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD"
-FASTA="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa"
-GTF="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.115.gtf"
+GENOME_DIR="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD"
+FASTA="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa"
+GTF="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.115.gtf"
 INDEX_NAME="cellranger_index"
 
 if [[ ! -f "${FASTA}" ]]; then

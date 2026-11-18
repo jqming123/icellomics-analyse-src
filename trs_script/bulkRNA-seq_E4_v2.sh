@@ -78,8 +78,8 @@ echo "-------------------------------------"
 ### private environment ###
 # 注意: 这一部分可能需要根据你的服务器环境进行调整
 eval "$(mamba shell hook --shell bash)"
-mamba activate /hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/RNAseq_E4
-export PERL5LIB="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/RNAseq_E4/lib/perl5/5.32"
+mamba activate /path/to/user/softwares/miniforge3/envs/RNAseq_E4
+export PERL5LIB="/path/to/user/softwares/miniforge3/envs/RNAseq_E4/lib/perl5/5.32"
 ############
 
 ### 1. fastp: 质控和过滤 ###

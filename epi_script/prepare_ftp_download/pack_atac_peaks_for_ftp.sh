@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -p corexd192
 #SBATCH -J pack_atac_peaks
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects/prepare_ftp_download/slurm_logs/pack_atac_peaks_%j.log
+#SBATCH -o /path/to/user/CellLine/epigen_projects/prepare_ftp_download/slurm_logs/pack_atac_peaks_%j.log
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
@@ -17,7 +17,7 @@ echo "Node: $(hostname)"
 echo "Start: $(date)"
 echo "============================================================"
 
-BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine"
+BASE_DIR="/path/to/user/CellLine"
 SRC_DIR="${BASE_DIR}/epigen_projects/prepare_ftp_download"
 PACK_DIR="${SRC_DIR}/packs"
 LOG_DIR="${SRC_DIR}/slurm_logs"

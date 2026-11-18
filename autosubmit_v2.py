@@ -8,7 +8,7 @@
 以确保脚本在会话断开后仍然继续运行，并方便后续查看运行日志。
 
 示例命令：
-nohup python -u autosubmit_v2.py > /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/03_logs/autosubmit_logs/vep_debug_final_round2.log 2>&1 &
+nohup python -u autosubmit_v2.py > /path/to/user/CellLine/genome_projects/PRJEB39258_CHO/03_logs/autosubmit_logs/vep_debug_final_round2.log 2>&1 &
 
 命令解释：
 - `nohup`: 运行命令，即使终端关闭，进程也不会停止。
@@ -93,8 +93,8 @@ def main():
     print(f"Script started at: {start_time}")
 
     max_tasks=50
-    username = "gaoxiaojing"
-    script_folder = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/EQ_jobs/PRJNA1008690_HEK293"
+    username = os.environ.get("USER", "")
+    script_folder = "/path/to/user/CellLine/transcriptome_projects/EQ_jobs/PRJNA1008690_HEK293"
     print(f"current script folder: {script_folder}, username:{username}, max tasks: {max_tasks}")
 
     script_list = [f for f in os.listdir(script_folder) if f.endswith('.sh')]

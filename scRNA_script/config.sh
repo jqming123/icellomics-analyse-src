@@ -5,7 +5,7 @@
 # ==================================
 
 # --- Base layout ---
-BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine"
+BASE_DIR="/path/to/user/CellLine"
 PROJECT_ROOT="$BASE_DIR/scRNA_projects"
 RESOURCES_ROOT="$BASE_DIR/resources"
 GEN_TOOLKIT_DIR="$RESOURCES_ROOT/src/scRNA_script/GENtoolkit"
@@ -15,11 +15,11 @@ UP_PY="$GEN_TOOLKIT_DIR/GENToolkit_alter.py"
 DOWN_PY="$GEN_TOOLKIT_DIR/GENToolkit_alter.py"
 
 # 其他软件需要的路径
-STAR_PATH="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/scRNA_env/bin"
+STAR_PATH="/path/to/user/softwares/miniforge3/envs/scRNA_env/bin"
 
 
 # --- Conda/Mamba ---
-CONDA_SH="/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+CONDA_SH="/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 CONDA_ENV="scRNA_env"
 
 # --- SLURM defaults ---

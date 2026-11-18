@@ -8,7 +8,7 @@
 # =============================================================================
 
 # ------------------------------ 参数解析 -------------------------------------
-.libPaths(c("/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/single_cell_1/lib/R/library", .libPaths()))
+.libPaths(c("/path/to/user/softwares/miniforge3/envs/single_cell_1/lib/R/library", .libPaths()))
 
 suppressPackageStartupMessages({
   library(optparse)
@@ -118,7 +118,7 @@ if (file.exists(qc_stats_file)) {
 }
 
 if (opt$run_scrublet || opt$convert_to_h5ad) {
-  use_python("/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/envs/single_cell_1/bin/python", required = TRUE)
+  use_python("/path/to/user/softwares/miniforge3/envs/single_cell_1/bin/python", required = TRUE)
 }
 
 start_time <- Sys.time()

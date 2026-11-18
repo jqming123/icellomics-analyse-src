@@ -2,7 +2,7 @@
 # ==================================
 # Script: run_single_sample_processing.sh
 # Description: Process a single sample BAM file to generate gVCF
-# Author: gaoxiaojing project
+# Author: project team
 # ==================================
 
 set -eo pipefail

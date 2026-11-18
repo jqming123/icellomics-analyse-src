@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 1. 指定工作目录路径
-WORK_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects"
+WORK_DIR="/path/to/user/CellLine/epigen_projects"
 
 # 2. 从命令行参数获取项目列表
 if [ $# -eq 0 ]; then

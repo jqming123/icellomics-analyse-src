@@ -56,7 +56,7 @@ def find_specific_error_logs(directory_path, log_file_prefix, specific_error_phr
     return found_error_files
 
 # 定义目标目录和日志文件前缀
-target_directory = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation_overlap_debug"
+target_directory = "/path/to/user/CellLine/genome_projects/PRJEB39258_CHO/03_logs/04_vep_annotation_overlap_debug"
 log_file_prefix = "vep_debug_chunk_"
 
 # 定义要查找的特定错误短语

@@ -42,7 +42,7 @@ option_list <- list(
   make_option(c("--db-species"), dest = "db_species", type = "character", default = "HS",
               help = "MSigDB database label recorded in output metadata [default %default]"),
   make_option(c("--hallmark-file"), dest = "hallmark_file", type = "character",
-              default = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/scRNA_script/LTC/cycle_analysis/MSigDB_Hallmark/msigdb_hallmark_HS.csv",
+              default = "/path/to/user/CellLine/resources/src/scRNA_script/LTC/cycle_analysis/MSigDB_Hallmark/msigdb_hallmark_HS.csv",
               help = "Local MSigDB Hallmark CSV [default %default]"),
   make_option(c("--assay"), type = "character", default = "RNA",
               help = "Seurat assay holding RNA counts [default %default]"),

@@ -3,7 +3,7 @@ import glob
 import sys
 
 # --- 用户可配置的参数 ---
-PROJECT_ROOT = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects"
+PROJECT_ROOT = "/path/to/user/CellLine/genome_projects"
 
 # 仅接收 PROJECT_NAME 参数
 if len(sys.argv) < 2:
@@ -22,8 +22,8 @@ TMP_DIR = os.path.join(PROJECT_DIR, "00_data/tmp")
 ALL_LOGS_DIR = os.path.join(PROJECT_DIR, "03_logs/s2q_log_file")
 GENERATED_SCRIPTS_DIR = os.path.join(PROJECT_DIR, "02_jobs/sra2fastq")
 
-CONFIG_SH_PATH = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/gen_script/config.sh"
-CONDA_PROFILE_PATH = "/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+CONFIG_SH_PATH = "/path/to/user/CellLine/resources/src/gen_script/config.sh"
+CONDA_PROFILE_PATH = "/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 CONDA_ENV_NAME = "genome_env"
 
 # SLURM 资源

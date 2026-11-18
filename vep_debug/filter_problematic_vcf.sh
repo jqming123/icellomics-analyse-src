@@ -1,15 +1,15 @@
 #!/bin/bash
 #SBATCH -p vmcore128             
 #SBATCH -J VEP_test              
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/03_logs/out_file/filter_problematic_vcf.out  # 标准输出重定向
-#SBATCH -e /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO/03_logs/err_file/filter_problematic_vcf.err  # 错误输出重定向
+#SBATCH -o /path/to/user/CellLine/genome_projects/PRJEB39258_CHO/03_logs/out_file/filter_problematic_vcf.out  # 标准输出重定向
+#SBATCH -e /path/to/user/CellLine/genome_projects/PRJEB39258_CHO/03_logs/err_file/filter_problematic_vcf.err  # 错误输出重定向
 #SBATCH --nodes=1                
 #SBATCH --ntasks-per-node=1      
 #SBATCH --cpus-per-task=8    
 #SBATCH --mem=100G               
 #SBATCH --time=120:00:00        
 
-PRJ_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/PRJEB39258_CHO"
+PRJ_DIR="/path/to/user/CellLine/genome_projects/PRJEB39258_CHO"
 LOGFILE="${PRJ_DIR}/01_results/08_vep_annotated/filter_problematic_vcf.log"
 touch "${LOGFILE}"
 exec > "${LOGFILE}" 2>&1 # 将所有标准输出和标准错误重定向到作业日志文件

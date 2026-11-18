@@ -4,22 +4,22 @@ import os
 # 配置区域: 所有可调整的参数都定义在这里
 # -----------------------------------------------------------------
 
-REF_BASE_DIR = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome"
+REF_BASE_DIR = "/path/to/user/CellLine/resources/ref_genome"
 
 CONFIG = {
     # 1. 路径设置
     "paths": {
-        "sra_data_root": '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_rawdata',
-        "project_results_root": '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result',
-        "main_script_path": '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/trs_script/bulkRNA-seq_E4_v2.sh',
-        "custom_bin_path": '/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/bin:/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/pixi_0.59.0/trs_env/.pixi/envs/default/bin'
+        "sra_data_root": '/path/to/user/CellLine/transcriptome_projects/rna_rawdata',
+        "project_results_root": '/path/to/user/CellLine/transcriptome_projects/rna_count_result',
+        "main_script_path": '/path/to/user/CellLine/resources/src/trs_script/bulkRNA-seq_E4_v2.sh',
+        "custom_bin_path": '/path/to/user/softwares/miniforge3/bin:/path/to/user/softwares/pixi_0.59.0/trs_env/.pixi/envs/default/bin'
     },
 
     # 2. SLURM作业调度系统设置
     "slurm_settings": {
         "partition": 'corexd192',
         "time": '7-00:00:00',  # D-HH:MM:SS 格式 
-        "log_dir": '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/logs',
+        "log_dir": '/path/to/user/CellLine/transcriptome_projects/logs',
     },
 
     # 3. 工具和资源参数

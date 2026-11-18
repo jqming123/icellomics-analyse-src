@@ -45,7 +45,7 @@ echo "项目ID列表: ${PROJECT_IDS[@]}"
 echo "================================================"
 
 # 进入基础工作目录
-cd /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/EQ_jobs || {
+cd /path/to/user/CellLine/transcriptome_projects/EQ_jobs || {
     echo "错误: 无法进入工作目录!"
     exit 1
 }
@@ -66,7 +66,7 @@ for PROJECT_ID in "${PROJECT_IDS[@]}"; do
     }
     
     # 定义原始数据路径
-    RAWDATA_BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_rawdata/${PROJECT_NAME}"
+    RAWDATA_BASE_DIR="/path/to/user/CellLine/transcriptome_projects/rna_rawdata/${PROJECT_NAME}"
     ORIGINAL_SRA_RUNID_FILE="${RAWDATA_BASE_DIR}/sra_runid.txt"
     
     echo "--- 开始数据完整性检查 ---"

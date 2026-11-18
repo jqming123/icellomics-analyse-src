@@ -17,7 +17,7 @@ DEFAULT_RESOURCES_ROOT = os.path.abspath(os.path.join(SCRIPT_DIR, '..', '..', '.
 """
         Note: The directory layout for your environment is as follows:
 
-        /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine
+        /path/to/user/CellLine
                 |--- resources
                 |       |--- ref_genome
                 |       |       |--- <GenomeName> (e.g., CriGri-PICRH-1.0, hg38_Ensemble)

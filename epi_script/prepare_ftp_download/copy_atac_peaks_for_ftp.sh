@@ -7,7 +7,7 @@ set -euo pipefail
 # 三种文件: *_peaks.narrowPeak, *_peaks.xls, *_summits.bed
 # ================================================================
 
-BASE_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine"
+BASE_DIR="/path/to/user/CellLine"
 EPIGEN_DIR="${BASE_DIR}/epigen_projects"
 DEST_DIR="${EPIGEN_DIR}/prepare_ftp_download"
 

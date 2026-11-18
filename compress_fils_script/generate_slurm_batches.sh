@@ -6,7 +6,7 @@
 set -euo pipefail
 
 # --- 配置部分 (请根据您的实际路径修改) ---
-SCRIPTS_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/compress_fils_script"
+SCRIPTS_DIR="/path/to/user/CellLine/resources/src/compress_fils_script"
 # 指向核心压缩逻辑模板的完整路径
 # 这个文件不直接运行，它的内容会被复制到每个生成的SLURM脚本中。
 COMPRESSION_LOGIC_TEMPLATE="${SCRIPTS_DIR}/compression_logic_template.sh"
@@ -16,7 +16,7 @@ GENERATED_SLURM_SCRIPTS_DIR="${SCRIPTS_DIR}/slurm_job_batches"
 LOG_BASE_DIR="${SCRIPTS_DIR}/logs"
 
 # 主要工作目录，所有样本目录都在这个目录之下
-MAIN_WORK_DIRECTORY="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result"
+MAIN_WORK_DIRECTORY="/path/to/user/CellLine/transcriptome_projects/rna_count_result"
 # 每个SLURM任务处理的样本目录数量
 BATCH_SIZE=50
 # ---------------------------------------------

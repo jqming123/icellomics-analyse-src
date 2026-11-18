@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # --- 配置根目录 ---
-PROJECT_ROOT="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects"
+PROJECT_ROOT="/path/to/user/CellLine/genome_projects"
 
 # --- 检查输入参数 ---
 if [ -z "$1" ]; then

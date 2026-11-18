@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -p corexd192                  # 指定作业提交的分区 (队列)
 #SBATCH -J slurm_compress_bams
-#SBATCH -o /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/trs_script/slurm_compress_bams_%j.log
+#SBATCH -o /path/to/user/CellLine/resources/src/trs_script/slurm_compress_bams_%j.log
 #SBATCH --nodes=1                         # 作业申请 1 个节点
 #SBATCH --ntasks-per-node=1               # 单节点启动 1 个任务
 #SBATCH --cpus-per-task=8                 # 使用配置的线程数
@@ -44,10 +44,10 @@ check_reference() {
 
 # --- 用户需要修改的部分 ---
 # 基因组参考序列（用于基因组比对文件）
-GENOME_FASTA="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
+GENOME_FASTA="/path/to/user/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa"
 # 转录本参考序列（用于转录组比对文件）
-TRANSCRIPTOME_FASTA="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.cdna.all.fa"
-WORK_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result"
+TRANSCRIPTOME_FASTA="/path/to/user/CellLine/resources/ref_genome/hg38_Ensemble/Homo_sapiens.GRCh38.cdna.all.fa"
+WORK_DIR="/path/to/user/CellLine/transcriptome_projects/rna_count_result"
 # -------------------------
 
 # 动态获取线程数, 若不在Slurm环境中则默认为8
@@ -63,7 +63,7 @@ echo "[$(get_timestamp)] 使用转录本参考: $TRANSCRIPTOME_FASTA"
 echo "[$(get_timestamp)] 正在切换工作目录至: $WORK_DIR"
 
 # 激活 conda 环境
-source "/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+source "/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 conda activate "RNAseq_E4"
 
 # 切换到工作目录，如果失败则退出

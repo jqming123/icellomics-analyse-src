@@ -33,7 +33,7 @@ cat(paste0("  - 接收到的组别名 (group_name): ", group_name, "\n"))
 cat(paste0("  - 接收到的细胞系名 (cl_name): ", cl_name, "\n"))
 
 # --- 动态构建变量 (路径必须与 DEGs.R 脚本中的定义一致) ---
-groups_dir <- '/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG/groups'
+groups_dir <- '/path/to/user/CellLine/transcriptome_projects/DEG/groups'
 outFolder <- file.path(groups_dir, cl_name, group_name)
 
 # --- 定义输入文件的路径 (这些文件由 DEGs.R 脚本生成) ---

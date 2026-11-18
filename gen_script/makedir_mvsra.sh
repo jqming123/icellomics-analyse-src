@@ -2,7 +2,7 @@
 ## 功能：指定一个细胞系名称和多个 BioProject ID，自动拼接目录名并迁移数据
 
 # 1. 基础源路径
-source_root="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/dna_sra"
+source_root="/path/to/user/CellLine/genome_projects/dna_sra"
 
 # 2. 设置当前要处理的细胞系名称 (在此处修改)
 cellline="Hela"
@@ -18,7 +18,7 @@ PRJNA752995
 base_structure="00_data/{dna_sra,raw_fastq,tmp,trimmed},01_results/{01_fastqc,02_bam,03_gvcf,04_genomicsdb,05_vcf_raw,06_vcf_filtered,logs,07_vcf_merged},02_jobs/{generated_mapping_jobs,genomicsdb_jobs,sra2fastq},03_logs/{01_mapping_gvcf,02_joint_calling,s2q_log_file}"
 
 # 进入工作根目录
-cd /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects || exit
+cd /path/to/user/CellLine/genome_projects || exit
 
 # 5. 循环处理
 for bp in "${bioprojects[@]}"; do

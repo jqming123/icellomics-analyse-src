@@ -18,7 +18,7 @@ def bytes_to_gb(bytes_size):
     return bytes_size / (1024**3)
 
 def main():
-    base_dir = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects"
+    base_dir = "/path/to/user/CellLine/genome_projects"
     exclude_dirs = {"CHO_NCBIRef_MergedCache", "dna_sra"}
     suffixes = ["HT1080", "HEK293", "CHO_E"]
     

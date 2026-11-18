@@ -9,10 +9,10 @@ import os
 import re
 import sys
 
-BASE_DIR = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects"
+BASE_DIR = "/path/to/user/CellLine/transcriptome_projects"
 GROUPS_BASE = os.path.join(BASE_DIR, "DEG", "groups")
-CSV_PATH = "/hpcdisk1/zhaowm_group/gaoxiaojing/agent_DE_config.csv"
-MD_PATH = "/hpcdisk1/zhaowm_group/gaoxiaojing/agent_full_report.md"
+CSV_PATH = "/path/to/user/agent_DE_config.csv"
+MD_PATH = "/path/to/user/agent_full_report.md"
 
 MRC5_KEYWORDS = ["MRC5", "MRC-5", "mrc5", "iCAF", "iCAFs"]
 WI38_KEYWORDS = ["WI38", "WI-38", "wi38", "WI_38"]

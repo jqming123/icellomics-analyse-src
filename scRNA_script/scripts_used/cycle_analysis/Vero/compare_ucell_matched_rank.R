@@ -19,7 +19,7 @@ option_list <- list(
   make_option(c("--species"), type = "character", default = "Chlorocebus sabaeus"),
   make_option(c("--db-species"), dest = "db_species", type = "character", default = "CS"),
   make_option(c("--hallmark-file"), dest = "hallmark_file", type = "character",
-              default = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/src/scRNA_script/LTC/cycle_analysis/Vero/MSigDB_Hallmark/msigdb_hallmark_CS.csv"),
+              default = "/path/to/user/CellLine/resources/src/scRNA_script/LTC/cycle_analysis/Vero/MSigDB_Hallmark/msigdb_hallmark_CS.csv"),
   make_option(c("--cluster-col"), dest = "cluster_col", type = "character", default = "seurat_clusters"),
   make_option(c("--old-ucell-max-rank"), dest = "old_ucell_max_rank", type = "integer", default = NULL,
               help = "Original UCell maxRank stored in the input object [default: read from --manifest]"),

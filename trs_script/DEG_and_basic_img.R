@@ -34,7 +34,7 @@ cl_name <- args[2]
 cat(paste0("  - 接收到的组别名 (groupname): ", groupname, "\n"))
 cat(paste0("  - 接收到的细胞系 (cl_name): ", cl_name, "\n"))
 
-groups_dir <- "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/DEG/groups"
+groups_dir <- "/path/to/user/CellLine/transcriptome_projects/DEG/groups"
 
 # --- 动态构建路径变量 ---
 project <- file.path(groups_dir, cl_name)

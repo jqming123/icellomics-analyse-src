@@ -9,7 +9,7 @@
 
 输入文件格式 (TSV):
     必须包含列: 'BioProject', 'Run', 'BioSample' (有表头)
-    路径模式: /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/run_spl_prj_tables/{cell_line}_run_spl_prj.tsv
+    路径模式: /path/to/user/CellLine/genome_projects/run_spl_prj_tables/{cell_line}_run_spl_prj.tsv
 
 输出结果:
     目录结构: <root_dir>/<BioProject>_<cell_line>/00_data/
@@ -41,8 +41,8 @@ def main():
     cell_line = args.cell_line
     
     # --- 2. 路径配置 ---
-    input_file = f"/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects/run_spl_prj_tables/{cell_line}_run_spl_prj.tsv"
-    root_dir = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/genome_projects"
+    input_file = f"/path/to/user/CellLine/genome_projects/run_spl_prj_tables/{cell_line}_run_spl_prj.tsv"
+    root_dir = "/path/to/user/CellLine/genome_projects"
 
     # --- 3. 逻辑执行 ---
     if not os.path.exists(input_file):

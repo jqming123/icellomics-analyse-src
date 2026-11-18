@@ -9,7 +9,7 @@
 
 输入文件格式 (TSV):
     必须包含列: 'BioProject', 'Run', 'BioSample' (有表头)
-    路径模式: /hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects/run_spl_prj_tables/{cell_line}_run_spl_prj.tsv
+    路径模式: /path/to/user/CellLine/epigen_projects/run_spl_prj_tables/{cell_line}_run_spl_prj.tsv
 
 输出结果:
     目录结构: <root_dir>/<BioProject>_<cell_line>/0_data/ （仅当项目目录存在时创建）
@@ -37,7 +37,7 @@ def main():
     cell_line = args.cell_line
     
     # --- 2. 路径配置 ---
-    root_dir = "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/epigen_projects"
+    root_dir = "/path/to/user/CellLine/epigen_projects"
     input_file = os.path.join(root_dir, "run_spl_prj_tables", f"{cell_line}_run_spl_prj.tsv")
 
     # --- 3. 逻辑执行 ---

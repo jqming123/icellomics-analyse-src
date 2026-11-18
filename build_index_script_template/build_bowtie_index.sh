@@ -6,15 +6,15 @@
 #SBATCH -c 10
 #SBATCH --mem=200G
 #SBATCH --time=200:00:00
-#SBATCH --output=/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/logs/Dog_E_UUGSD_bowtie_index.log
+#SBATCH --output=/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/logs/Dog_E_UUGSD_bowtie_index.log
 
 echo "脚本启动时间: $(date)"
-source "/hpcdisk1/zhaowm_group/gaoxiaojing/softwares/miniforge3/etc/profile.d/conda.sh"
+source "/path/to/user/softwares/miniforge3/etc/profile.d/conda.sh"
 conda activate ATAC_E4
 
-REF_GENOME_DIR="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD"
-FASTA_FILE="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa"
-INDEX_BASENAME="/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel"
+REF_GENOME_DIR="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD"
+FASTA_FILE="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel.fa"
+INDEX_BASENAME="/path/to/user/CellLine/resources/ref_genome/Dog_E_UUGSD/Canis_lupus_familiarisgsd.UU_Cfam_GSD_1.0.dna.toplevel"
 
 if [ -f "${FASTA_FILE}" ]; then
     echo "正在为 ${FASTA_FILE} 构建 Bowtie2 索引..."

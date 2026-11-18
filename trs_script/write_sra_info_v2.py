@@ -9,13 +9,13 @@ from pathlib import Path
 
 
 DEFAULT_RAWDATA_ROOT = (
-    "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_rawdata"
+    "/path/to/user/CellLine/transcriptome_projects/rna_rawdata"
 )
 DEFAULT_FASTQ_BASE_ROOT = (
-    "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/rna_count_result"
+    "/path/to/user/CellLine/transcriptome_projects/rna_count_result"
 )
 DEFAULT_OUTPUT_ROOT = (
-    "/hpcdisk1/zhaowm_group/gaoxiaojing/CellLine/transcriptome_projects/EQ_jobs"
+    "/path/to/user/CellLine/transcriptome_projects/EQ_jobs"
 )
 DEFAULT_PROJECT_INFO_FILE = "project_info.txt"
 
